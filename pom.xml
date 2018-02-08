@@ -1,10 +1,10 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>ru.job4j</groupId>
-  <artifactId>junior</artifactId>
+  <artifactId>vbolokhov</artifactId>
   <packaging>pom</packaging>
   <version>2.0</version>
-  <name>junior</name>
+  <name>vbolokhov</name>
   <url>http://job4j.ru</url>
   
   <properties>
@@ -54,6 +54,14 @@
 			</goals>
 		  </execution>
 		</executions>
+	  </plugin>
+	  <plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-compiler-plugin</artifactId>
+		<version>3.3</version>
+		<configuration>
+		  <compilerVersion>1.8</compilerVersion>
+		</configuration>
 	  </plugin>
     </plugins>
   </build>
