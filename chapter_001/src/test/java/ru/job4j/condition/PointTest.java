@@ -18,8 +18,8 @@ public class PointTest {
      */
     @Test
     public void whenFirstZeroZeroSecondThreeFourThenFive() {
-        Point a = new Point(0,0);
-        Point b = new Point(3,4);
+        Point a = new Point(0, 0);
+        Point b = new Point(3, 4);
         double result = a.dinstanceTo(b);
         double expected = 5D;
         assertThat(result, is(expected));
