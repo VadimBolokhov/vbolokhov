@@ -15,4 +15,15 @@ public class Max {
     public int max(int first, int second) {
         return first >= second ? first : second;
     }
+
+    /**
+     * Возвращает наибольшее из трех целых чисел.
+     * @param first - первое сравниваемое число.
+     * @param second - второе сравниваемое число.
+     * @param third - третье сравниваемое число.
+     * @return наибольшее из трех.
+     */
+    public int max(int first, int second, int third) {
+        return max(first, max(second, third));
+    }
 }

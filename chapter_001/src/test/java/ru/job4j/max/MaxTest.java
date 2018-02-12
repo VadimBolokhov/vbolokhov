@@ -40,4 +40,13 @@ public class MaxTest {
         int result = maxim.max(2, 2);
         assertThat(result, is(2));
     }
+    /**
+     * Test max(int first, int second, int third)
+     */
+    @Test
+    public void whenThreeNumbers() {
+        Max maxim = new Max();
+        int result = maxim.max(1, 2, 3);
+        assertThat(result, is(3));
+    }
 }
