@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThat;
  */
 public class ArrayDuplicateTest {
     /**
-     * Проверка метода ramove() для случая, когда в массиве есть повторяющиеся элементы
+     * Проверка метода remove() для случая, когда в массиве есть повторяющиеся элементы
      */
     @Test
     public void whenRemoveDuplicatesThenReturnArrayWithoutDuplicates() {
@@ -26,7 +26,7 @@ public class ArrayDuplicateTest {
     }
 
     /**
-     * Проверка метода ramove() для случая, когда в массиве нет повторяющихся элементов
+     * Проверка метода remove() для случая, когда в массиве нет повторяющихся элементов
      */
     @Test
     public void whenRemoveNoDuplicatesThenReturnArray() {
