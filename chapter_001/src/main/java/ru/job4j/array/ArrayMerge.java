@@ -16,20 +16,17 @@ public class ArrayMerge {
     public int[] merge(int[] first, int[] second) {
         int[] result = new int[first.length + second.length];
         int i = 0, j = 0, k = 0;
-        for (; (i < first.length) && (j < second.length); k++) {
+        while (i < first.length && j < second.length) {
             if (first[i] < second[j]) {
-                result[k] = first[i];
-                i++;
+                result[k++] = first[i++];
             } else {
-                result[k] = second[j];
-                j++;
+                result[k++] = second[j++];
             }
         }
-        while (i < first.length) {
-            result[k++] = first[i++];
-        }
-        while (j < second.length) {
-            result[k++] = second[j++];
+        if (first.length > second.length) {
+            System.arraycopy(first, i, result, k, result.length - k);
+        } else {
+            System.arraycopy(second, j, result, k, result.length - k);
         }
         return result;
     }
