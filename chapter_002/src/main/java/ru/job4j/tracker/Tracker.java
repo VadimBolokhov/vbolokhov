@@ -44,7 +44,7 @@ public class Tracker {
     public void replace(String id, Item replace) {
         for (int i = 0; i < this.position; i++) {
             if (this.items[i] != null && this.items[i].getId().equals(id)) {
-                replace.setId(this.generateId());
+                replace.setId(id);
                 this.items[i] = replace;
                 break;
             }

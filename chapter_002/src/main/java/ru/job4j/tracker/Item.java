@@ -24,10 +24,15 @@ public class Item {
      * Конструктор - создание нового объекта
      */
     Item() {
-        this.name = "Default Item";
+        this("Default Item", "", 0);
         this.id = "";
     }
 
+    /**
+     * Конструктор - создание нового объекта с заданными параметрами
+     * @param name имя
+     * @param desc опсиание
+     */
     Item(String name, String desc) {
         this.name = name;
         this.desc = desc;
