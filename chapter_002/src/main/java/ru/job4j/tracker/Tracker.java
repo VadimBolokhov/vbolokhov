@@ -94,7 +94,7 @@ public class Tracker {
      * @return результат поиска
      */
     public Item findById(String id) {
-        Item result = null;
+        Item result = new EmptyItem();
         for (Item item : items) {
             if (item != null && item.getId().equals(id)) {
                 result = item;

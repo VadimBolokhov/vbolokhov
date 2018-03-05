@@ -137,11 +137,7 @@ public class StartUI {
     private void findItemById() {
         System.out.println("------------ Найти заявку по id ------------");
         String id = this.input.ask("Введите id заявки : ");
-        if (this.tracker.findById(id) == null) {
-            System.out.println("Заявки с заданным id не существует");
-        } else {
-            System.out.println(this.tracker.findById(id));
-        }
+        System.out.println(this.tracker.findById(id));
     }
 
     /**

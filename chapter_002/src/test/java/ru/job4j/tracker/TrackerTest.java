@@ -62,7 +62,7 @@ public class TrackerTest {
         tracker.add(item);
         String id = tracker.getAll()[0].getId() + "0";
         Item result = tracker.findById(id);
-        assertNull(result);
+        assertTrue(result instanceof EmptyItem);
     }
 
     /**
