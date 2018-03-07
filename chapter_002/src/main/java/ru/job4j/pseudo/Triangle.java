@@ -1,5 +1,7 @@
 package ru.job4j.pseudo;
 
+import java.util.StringJoiner;
+
 /**
  * Рисование треугольника.
  * @author Vadim Bolokhov
@@ -9,10 +11,10 @@ package ru.job4j.pseudo;
 public class Triangle implements Shape {
     @Override
     public String draw() {
-        StringBuilder pic = new StringBuilder();
-        pic.append("  ^  \n");
-        pic.append(" / \\ \n");
-        pic.append("/___\\");
+        StringJoiner pic = new StringJoiner(System.lineSeparator());
+        pic.add("  ^  ");
+        pic.add(" / \\ ");
+        pic.add("/___\\");
         return pic.toString();
     }
 }

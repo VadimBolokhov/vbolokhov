@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.StringJoiner;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -46,12 +47,11 @@ public class PaintTest {
         new Paint().draw(new Square());
         assertThat(new String(out.toByteArray()),
                 is(
-                        new StringBuilder()
-                                .append("****\n")
-                                .append("*  *\n")
-                                .append("*  *\n")
-                                .append("****")
-                                .append(System.lineSeparator())
+                        new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
+                                .add("****")
+                                .add("*  *")
+                                .add("*  *")
+                                .add("****")
                                 .toString()
                 )
         );
@@ -65,11 +65,10 @@ public class PaintTest {
         new Paint().draw(new Triangle());
         assertThat(new String(out.toByteArray()),
                 is(
-                        new StringBuilder()
-                                .append("  ^  \n")
-                                .append(" / \\ \n")
-                                .append("/___\\")
-                                .append(System.lineSeparator())
+                        new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
+                                .add("  ^  ")
+                                .add(" / \\ ")
+                                .add("/___\\")
                                 .toString()
                 )
         );

@@ -1,5 +1,7 @@
 package ru.job4j.pseudo;
 
+import java.util.StringJoiner;
+
 /**
  * Рисование квадрата.
  * @author Vadim Bolokhov
@@ -9,11 +11,11 @@ package ru.job4j.pseudo;
 public class Square implements Shape {
     @Override
     public String draw() {
-        StringBuilder pic = new StringBuilder();
-        pic.append("****\n");
-        pic.append("*  *\n");
-        pic.append("*  *\n");
-        pic.append("****");
+        StringJoiner pic = new StringJoiner(System.lineSeparator());
+        pic.add("****");
+        pic.add("*  *");
+        pic.add("*  *");
+        pic.add("****");
         return pic.toString();
     }
 }
