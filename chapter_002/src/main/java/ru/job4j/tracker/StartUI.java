@@ -27,7 +27,12 @@ public class StartUI {
      */
     public void init() {
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
-        menu.init();
+        menu.fillActions();
+        while (!menu.getExit()) {
+            menu.showMenu();
+            int key = Integer.valueOf(this.input.ask("Введите пункт меню : "));
+            menu.select(key);
+        }
     }
 
     public static void main(String[] args) {

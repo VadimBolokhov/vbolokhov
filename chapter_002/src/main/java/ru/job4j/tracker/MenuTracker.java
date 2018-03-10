@@ -27,21 +27,24 @@ public class MenuTracker {
     }
 
     /**
-     * Инициализация меню
+     * Получить значение переменной для завершения работы программы
+     * @return false - во время работы программы, true - при завершении
      */
-    public void init() {
-        this.fillActions();
-        while (!exit) {
-            this.showMenu();
-            int key = Integer.valueOf(this.input.ask("Введите пункт меню : "));
-            this.actions[key].execute(this.input, this.tracker);
-        }
+    public boolean getExit() {
+        return this.exit;
+    }
+
+    /**
+     * Выполнение выбранного пункта меню
+     */
+    public void select(int key) {
+        this.actions[key].execute(this.input, this.tracker);
     }
 
     /**
      * Заполняет массив пунктов меню
      */
-    private void fillActions() {
+    public void fillActions() {
         this.actions[0] = this.new AddItem();
         this.actions[1] = this.new ShowAllItems();
         this.actions[2] = new MenuTracker.EditItem();
@@ -54,7 +57,7 @@ public class MenuTracker {
     /**
      * Выводит на экран меню команд
      */
-    private void showMenu() {
+    public void showMenu() {
         System.out.println("Меню");
         for (UserAction action : this.actions) {
             if (action != null) {
