@@ -17,4 +17,22 @@ public class ConsoleInput implements Input {
         System.out.println(question);
         return scanner.nextLine();
     }
+
+    @Override
+    public int ask(String question, int[] range) {
+        System.out.println(question);
+        int key = Integer.valueOf(scanner.nextLine());
+        boolean exist = false;
+        for (int i : range) {
+            if (key == i) {
+                exist = true;
+                break;
+            }
+        }
+        if (exist) {
+            return key;
+        } else {
+            throw new MenuOutException("Пункта меню не существует");
+        }
+    }
 }

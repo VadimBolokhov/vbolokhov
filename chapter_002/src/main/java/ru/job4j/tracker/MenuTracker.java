@@ -27,6 +27,14 @@ public class MenuTracker {
     }
 
     /**
+     * Получить массив пунктов меню
+     * @return все пункты меню
+     */
+    public UserAction[] getActions() {
+        return this.actions;
+    }
+
+    /**
      * Получить значение переменной для завершения работы программы
      * @return false - во время работы программы, true - при завершении
      */
