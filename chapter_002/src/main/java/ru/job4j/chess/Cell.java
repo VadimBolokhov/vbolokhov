@@ -1,5 +1,7 @@
 package ru.job4j.chess;
 
+import java.util.Objects;
+
 /**
  * Клетка шахматной доски.
  * @author Vadim Bolokhov
@@ -35,6 +37,14 @@ public class Cell {
      */
     public boolean valid() {
         return 0 <= this.x && this.x < 8 && 0 <= this.y && this.y < 8;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 31 * hash + this.x;
+        hash = 31 * hash + this.y;
+        return hash;
     }
 
     @Override

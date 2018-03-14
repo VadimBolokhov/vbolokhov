@@ -33,7 +33,7 @@ public class BishopTest {
         try {
             Cell[] result = this.bishop.way(this.source, dest);
             assertThat(result, is(expected));
-        } catch(ImpossibleMoveException ime) {
+        } catch (ImpossibleMoveException ime) {
             System.out.println(ime);
         }
     }
@@ -45,7 +45,7 @@ public class BishopTest {
     public void whenInvalidWayThenExceptionThrown() {
         try {
             this.bishop.way(this.source, new Cell(1, 0));
-        } catch(ImpossibleMoveException ime) {
+        } catch (ImpossibleMoveException ime) {
             assertThat(ime.getMessage(), is("Слон так не ходит!"));
         }
     }

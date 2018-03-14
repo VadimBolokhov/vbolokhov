@@ -40,8 +40,8 @@ public class Board {
      */
     public Figure getFigure(Cell target) {
         Figure result = new NullFigure(target);
-        for(Figure fig : this.figures) {
-            if(fig != null && fig.position.equals(target)) {
+        for (Figure fig : this.figures) {
+            if (fig != null && fig.position.equals(target)) {
                 result = fig;
                 break;
             }
@@ -70,9 +70,9 @@ public class Board {
      * @param source начальная позиция
      * @param dest куда поставить
      * @return true - если фигуру удалось передвинуть, false - в противном случае
-     * @throws ImpossibleMoveException
-     * @throws OccupiedWayException
-     * @throws FigureNotFoundException
+     * @throws ImpossibleMoveException если фигура не пожет пойти на заданное поле
+     * @throws OccupiedWayException если путь фигуры заблокирован
+     * @throws FigureNotFoundException если пустое поле
      */
     public boolean move(Cell source, Cell dest)
             throws ImpossibleMoveException,

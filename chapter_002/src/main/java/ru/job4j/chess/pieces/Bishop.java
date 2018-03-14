@@ -56,7 +56,7 @@ public class Bishop extends Figure {
     public boolean validPath(Cell source, Cell dest) {
         int dx = Math.abs(dest.getX() - source.getX());
         int dy = Math.abs(dest.getY() - source.getY());
-        return dx*dy != 0 && dx == dy && dest.valid();
+        return !dest.equals(source) && dest.valid() && dx == dy;
     }
 
     /**

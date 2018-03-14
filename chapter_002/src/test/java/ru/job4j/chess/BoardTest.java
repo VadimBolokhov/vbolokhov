@@ -3,7 +3,7 @@ package ru.job4j.chess;
 import org.junit.Before;
 import org.junit.Test;
 import ru.job4j.chess.exceptions.IncorrectPositionException;
-import ru.job4j.chess.pieces.Bishop;
+import ru.job4j.chess.pieces.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -35,7 +35,7 @@ public class BoardTest {
         this.chess.add(new Bishop(this.source));
         try {
             this.chess.move(this.source, dest);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         assertTrue(this.chess.getFigure(dest) instanceof Bishop);
@@ -48,7 +48,7 @@ public class BoardTest {
     public void whenMoveEmptySpace() {
         try {
             this.chess.move(this.source, new Cell(1, 1));
-        } catch(Exception e) {
+        } catch (Exception e) {
             assertThat(e.getMessage(), is("На заданном поле нет фигуры."));
         }
     }
@@ -61,7 +61,7 @@ public class BoardTest {
         this.chess.add(new Bishop(this.source));
         try {
             this.chess.move(this.source, new Cell(1, 0));
-        } catch(Exception e) {
+        } catch (Exception e) {
             assertThat(e.getMessage(), is("Слон так не ходит!"));
         }
     }
@@ -76,7 +76,7 @@ public class BoardTest {
         this.chess.add(new Bishop(dest));
         try {
             this.chess.move(this.source, dest);
-        } catch(Exception e) {
+        } catch (Exception e) {
             assertThat(e.getMessage(), is("На пути есть фигуры"));
         }
     }
@@ -99,12 +99,12 @@ public class BoardTest {
         this.chess.add(new Bishop(this.source));
         try {
             this.chess.add(new Bishop(new Cell(0, 8)));
-        } catch(IncorrectPositionException ipe) {
+        } catch (IncorrectPositionException ipe) {
             assertThat(ipe.getMessage(), is("Невозможно поставить фигуру на поле 0 8"));
         }
         try {
             this.chess.add(new Bishop(this.source));
-        } catch(IncorrectPositionException ipe) {
+        } catch (IncorrectPositionException ipe) {
             assertThat(ipe.getMessage(), is("Невозможно поставить фигуру на поле 0 0"));
         }
     }
