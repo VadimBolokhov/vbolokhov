@@ -4,7 +4,8 @@ import ru.job4j.chess.exceptions.FigureNotFoundException;
 import ru.job4j.chess.exceptions.ImpossibleMoveException;
 import ru.job4j.chess.exceptions.IncorrectPositionException;
 import ru.job4j.chess.exceptions.OccupiedWayException;
-import ru.job4j.chess.pieces.NullFigure;
+
+import java.util.Optional;
 
 /**
  * Шахматная доска.
@@ -22,31 +23,29 @@ public class Board {
      * @param figure шахматная фигура
      */
     public void add(Figure figure) throws IncorrectPositionException {
-        if (this.getFigure(figure.position) instanceof NullFigure && figure.position.valid()) {
-            this.figures[this.position++] = figure;
-        } else {
+        if (!figure.position.valid() || this.getFigure(figure.position).isPresent()) {
             throw new IncorrectPositionException(
-                    String.format("Невозможно поставить фигуру на поле %d %d",
-                            figure.position.getX(),
-                            figure.position.getY())
+                    String.format("Невозможно поставить фигуру на поле %s",
+                            figure.position)
             );
         }
+        this.figures[this.position++] = figure;
     }
 
     /**
      * Проверка какая фигура стоит на заданном поле
      * @param target клетка
-     * @return фигура - если есть, NullFigure - если клетка пуста
+     * @return фигура - если есть
      */
-    public Figure getFigure(Cell target) {
-        Figure result = new NullFigure(target);
+    public Optional<Figure> getFigure(Cell target) {
+        Figure result = null;
         for (Figure fig : this.figures) {
             if (fig != null && fig.position.equals(target)) {
                 result = fig;
                 break;
             }
         }
-        return result;
+        return Optional.ofNullable(result);
     }
 
     /**
@@ -57,7 +56,7 @@ public class Board {
     private boolean clearPath(Cell[] path) {
         boolean clear = true;
         for (Cell cell : path) {
-            if (!(this.getFigure(cell) instanceof NullFigure)) {
+            if (this.getFigure(cell).isPresent()) {
                 clear = false;
                 break;
             }
@@ -78,6 +77,9 @@ public class Board {
             throws ImpossibleMoveException,
             OccupiedWayException,
             FigureNotFoundException {
+        if (!this.getFigure(source).isPresent()) {
+            throw new FigureNotFoundException("На заданном поле нет фигуры.");
+        }
         boolean movable = false;
         for (int i = 0; i < this.figures.length; i++) {
             if (this.figures[i] != null && this.figures[i].position.equals(source)) {
@@ -88,8 +90,6 @@ public class Board {
                 this.figures[i] = this.figures[i].copy(dest);
                 movable = true;
                 break;
-            } else {
-                throw new FigureNotFoundException("На заданном поле нет фигуры.");
             }
         }
         return movable;

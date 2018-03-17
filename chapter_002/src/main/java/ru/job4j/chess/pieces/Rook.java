@@ -1,21 +1,22 @@
 package ru.job4j.chess.pieces;
 
 import ru.job4j.chess.Cell;
-import ru.job4j.chess.exceptions.ImpossibleMoveException;
 import ru.job4j.chess.Figure;
+import ru.job4j.chess.exceptions.ImpossibleMoveException;
 
 /**
- * Шахматная фигура - слон.
+ * Шахматная фигура - ладья.
  * @author Vadim Bolokhov
  * @version $Id$
  * @since 0.1
  */
-public class Bishop extends Figure {
+public class Rook extends Figure {
+
     /**
      * Конструктор - создание фигуры на заданном поле
      * @param position поле
      */
-    public Bishop(Cell position) {
+    public Rook(Cell position) {
         super(position);
     }
 
@@ -24,7 +25,7 @@ public class Bishop extends Figure {
      * @param x координата x
      * @param y координата y
      */
-    public Bishop(int x, int y) {
+    public Rook(int x, int y) {
         super(x, y);
     }
 
@@ -35,22 +36,22 @@ public class Bishop extends Figure {
 
     @Override
     public Figure copy(Cell dest) {
-        return new Bishop(dest);
+        return new Rook(dest);
     }
 
     @Override
     public boolean validPath(Cell source, Cell dest) {
-        int dx = Math.abs(dest.getX() - source.getX());
-        int dy = Math.abs(dest.getY() - source.getY());
-        return !dest.equals(source) && dest.valid() && dx == dy;
+        int dx = dest.getX() - source.getX();
+        int dy = dest.getY() - source.getY();
+        return dest.valid() && dx != dy && dx * dy == 0;
     }
 
     /**
      * Возвращает название фигуры
-     * @return Слон
+     * @return Ладья
      */
     @Override
     public String toString() {
-        return "Слон";
+        return "Ладья";
     }
 }

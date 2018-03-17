@@ -9,7 +9,8 @@ import java.util.Objects;
  * @since 0.1
  */
 public class Cell {
-    private int x, y;
+    private int x;
+    private int y;
 
     /**
      * Конструктор - создание объекта с заданными координатами
@@ -24,7 +25,6 @@ public class Cell {
     public int getX() {
         return this.x;
     }
-
 
     public int getY() {
         return this.y;
@@ -55,5 +55,10 @@ public class Cell {
             result = this.x == cell.getX() && this.y == cell.getY();
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%d, %d]", this.x, this.y);
     }
 }

@@ -38,7 +38,7 @@ public class BoardTest {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        assertTrue(this.chess.getFigure(dest) instanceof Bishop);
+        assertTrue(this.chess.getFigure(dest).get() instanceof Bishop);
     }
 
     /**
@@ -88,7 +88,7 @@ public class BoardTest {
     public void whenAddFigureThenBoardHasSameFigure() {
         Figure bishop = new Bishop(this.source);
         this.chess.add(bishop);
-        assertThat(this.chess.getFigure(this.source), is(bishop));
+        assertThat(this.chess.getFigure(this.source).get(), is(bishop));
     }
 
     /**
@@ -100,12 +100,12 @@ public class BoardTest {
         try {
             this.chess.add(new Bishop(new Cell(0, 8)));
         } catch (IncorrectPositionException ipe) {
-            assertThat(ipe.getMessage(), is("Невозможно поставить фигуру на поле 0 8"));
+            assertThat(ipe.getMessage(), is("Невозможно поставить фигуру на поле [0, 8]"));
         }
         try {
             this.chess.add(new Bishop(this.source));
         } catch (IncorrectPositionException ipe) {
-            assertThat(ipe.getMessage(), is("Невозможно поставить фигуру на поле 0 0"));
+            assertThat(ipe.getMessage(), is("Невозможно поставить фигуру на поле [0, 0]"));
         }
     }
 }

@@ -9,18 +9,18 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 /**
- * Bishop Test.
+ * Queen Test.
  * @author Vadim Bolokhov
  * @version $Id$
  * @since 0.1
  */
-public class BishopTest {
-    private Bishop bishop;
+public class QueenTest {
+    private Queen queen;
     private Cell source = new Cell(0, 0);
 
     @Before
     public void init() {
-        this.bishop = new Bishop(this.source);
+        this.queen = new Queen(this.source);
     }
 
     /**
@@ -31,7 +31,7 @@ public class BishopTest {
         Cell dest = new Cell(2, 2);
         Cell[] expected = {new Cell(1, 1), dest};
         try {
-            Cell[] result = this.bishop.way(this.source, dest);
+            Cell[] result = this.queen.way(this.source, dest);
             assertThat(result, is(expected));
         } catch (ImpossibleMoveException ime) {
             System.out.println(ime);
@@ -44,9 +44,9 @@ public class BishopTest {
     @Test
     public void whenInvalidWayThenExceptionThrown() {
         try {
-            this.bishop.way(this.source, new Cell(1, 0));
+            this.queen.way(this.source, new Cell(2, 1));
         } catch (ImpossibleMoveException ime) {
-            assertThat(ime.getMessage(), is("Слон так не ходит!"));
+            assertThat(ime.getMessage(), is("Ферзь так не ходит!"));
         }
     }
 
@@ -55,7 +55,7 @@ public class BishopTest {
      */
     @Test
     public void whenValidPath() {
-        assertTrue(this.bishop.validPath(this.source, new Cell(1, 1)));
-        assertFalse(this.bishop.validPath(this.source, new Cell(1, 0)));
+        assertTrue(this.queen.validPath(this.source, new Cell(1, 1)));
+        assertFalse(this.queen.validPath(this.source, new Cell(1, 2)));
     }
 }
