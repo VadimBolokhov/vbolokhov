@@ -1,9 +1,6 @@
 package ru.job4j.search;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Конвертация двумерного массива в ArrayList и наоборот.
@@ -43,6 +40,22 @@ public class ConvertList {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns && iterator.hasNext(); j++) {
                 result[i][j] = iterator.next();
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Конвертирует список целочисленных массивов в один большой
+     * список ArrayList
+     * @param list заданный список
+     * @return результат конвертации
+     */
+    public List<Integer> convert(List<int[]> list) {
+        List<Integer> result = new ArrayList<>();
+        for (int[] array : list) {
+            for (int i : array) {
+                result.add(i);
             }
         }
         return result;
