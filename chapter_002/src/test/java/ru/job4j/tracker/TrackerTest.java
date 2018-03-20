@@ -2,6 +2,10 @@ package ru.job4j.tracker;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -20,7 +24,7 @@ public class TrackerTest {
         Tracker tracker = new Tracker();
         Item item = new Item("test1", "testDescription", 123L);
         tracker.add(item);
-        assertThat(tracker.getAll()[0], is(item));
+        assertThat(tracker.getAll().get(0), is(item));
     }
 
     /**
@@ -31,10 +35,10 @@ public class TrackerTest {
         Tracker tracker = new Tracker();
         Item item = new Item("test1", "testDescription", 123L);
         tracker.add(item);
-        String id = tracker.getAll()[0].getId();
+        String id = tracker.getAll().get(0).getId();
         tracker.delete(id);
-        Item[] result = tracker.getAll();
-        Item[] expected = new Item[0];
+        List<Item> result = tracker.getAll();
+        List<Item> expected = new ArrayList<>();
         assertThat(result, is(expected));
     }
 
@@ -46,9 +50,9 @@ public class TrackerTest {
         Tracker tracker = new Tracker();
         Item item = new Item("test1", "testDescription", 123L);
         tracker.add(item);
-        Item expected = tracker.getAll()[0];
+        Item expected = tracker.getAll().get(0);
         String id = expected.getId();
-        Item result = tracker.findById(id);
+        Item result = tracker.findById(id).get();
         assertThat(result, is(item));
     }
 
@@ -60,9 +64,9 @@ public class TrackerTest {
         Tracker tracker = new Tracker();
         Item item = new Item("test2", "testDescription", 123L);
         tracker.add(item);
-        String id = tracker.getAll()[0].getId() + "0";
-        Item result = tracker.findById(id);
-        assertTrue(result instanceof EmptyItem);
+        String id = tracker.getAll().get(0).getId() + "0";
+        Optional<Item> result = tracker.findById(id);
+        assertFalse(result.isPresent());
     }
 
     /**
@@ -74,10 +78,9 @@ public class TrackerTest {
         Item item = new Item("test1", "testDescription", 123L);
         Item replace = new Item("test2", "testDescription", 456L);
         tracker.add(item);
-        String itemId = tracker.getAll()[0].getId();
+        String itemId = tracker.getAll().get(0).getId();
         tracker.replace(itemId, replace);
-        Item[] expected = {replace};
-        assertThat(tracker.getAll(), is(expected));
+        assertTrue(tracker.getAll().contains(replace));
     }
 
     /**
@@ -90,9 +93,9 @@ public class TrackerTest {
         Item item2 = new Item("test2", "testDescription", 456L);
         tracker.add(item1);
         tracker.add(item2);
-        Item[] expected = {item1, item2};
-        Item[] result = tracker.getAll();
-        assertThat(result, is(expected));
+        List<Item> result = tracker.getAll();
+        assertTrue(result.contains(item1));
+        assertTrue(result.contains(item2));
     }
 
     /**
@@ -103,7 +106,7 @@ public class TrackerTest {
         Tracker tracker = new Tracker();
         Item item = new Item("test1", "testDescription", 123L);
         tracker.add(item);
-        Item result = tracker.findByName("test1")[0];
+        Item result = tracker.findByName("test1").get(0);
         assertThat(result, is(item));
     }
 
@@ -115,8 +118,7 @@ public class TrackerTest {
         Tracker tracker = new Tracker();
         Item item = new Item("test1", "testDescription", 123L);
         tracker.add(item);
-        Item[] result = tracker.findByName("test2");
-        Item[] expected = new Item[0];
-        assertThat(result, is(expected));
+        List<Item> result = tracker.findByName("test2");
+        assertTrue(result.isEmpty());
     }
 }

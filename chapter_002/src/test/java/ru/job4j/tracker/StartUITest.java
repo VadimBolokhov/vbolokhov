@@ -46,7 +46,7 @@ public class StartUITest {
     public void whenUserAddItemThenTrackerHasNewItemWithSameName() {
         Input input = new StubInput(new String[] {"0", "test name", "desc", "6"});
         new StartUI(input, this.tracker).init();
-        assertThat(this.tracker.getAll()[0].getName(), is("test name"));
+        assertThat(this.tracker.getAll().get(0).getName(), is("test name"));
     }
 
     /**
@@ -57,7 +57,7 @@ public class StartUITest {
         Item item = this.tracker.add(new Item());
         Input input = new StubInput(new String[]{"2", item.getId(), "test name", "desc", "6"});
         new StartUI(input, this.tracker).init();
-        assertThat(this.tracker.findById(item.getId()).getName(), is("test name"));
+        assertThat(this.tracker.findById(item.getId()).get().getName(), is("test name"));
     }
 
     /**
@@ -68,7 +68,7 @@ public class StartUITest {
         Item item = this.tracker.add(new Item());
         Input input = new StubInput(new String[] {"3", item.getId(), "6"});
         new StartUI(input, this.tracker).init();
-        assertThat(this.tracker.getAll(), is(new Item[0]));
+        assertFalse(this.tracker.getAll().contains(item));
     }
 
     /**
@@ -126,14 +126,13 @@ public class StartUITest {
      */
     @Test
     public void whenFindByIdUnexistingItemThenShowsMessage() {
-        String result, expected;
+        String result;
         Item item = new Item("test name", "desc");
         this.tracker.add(item);
         Input input = new StubInput(new String[] {"4", item.getId() + " ", "6"});
         new StartUI(input, this.tracker).init();
         result = new String(this.out.toByteArray());
-        expected = new EmptyItem().toString();
-        assertTrue(result.contains(expected));
+        assertTrue(result.contains("Заявки не существует"));
     }
 
     /**
@@ -141,7 +140,8 @@ public class StartUITest {
      */
     @Test
     public void whenFindByNameThenShowsItemsWithSameName() {
-        String result, expected;
+        String result;
+        String expected;
         Item item = new Item("test name", "desc");
         this.tracker.add(item);
         Input input = new StubInput(new String[] {"5", "test name", "6"});

@@ -1,5 +1,8 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Меню программы.
  * @author Vadim Bolokhov
@@ -11,8 +14,8 @@ public class MenuTracker {
     private Input input;
     /** Хранилище заявок */
     private Tracker tracker;
-    /** Массив пунктов меню */
-    private UserAction[] actions = new UserAction[7];
+    /** Список пунктов меню */
+    private List<UserAction> actions = new ArrayList<>();
     /** Переменная для завершения работы программы */
     private boolean exit = false;
 
@@ -30,7 +33,7 @@ public class MenuTracker {
      * Получить массив пунктов меню
      * @return все пункты меню
      */
-    public UserAction[] getActions() {
+    public List<UserAction> getActions() {
         return this.actions;
     }
 
@@ -46,7 +49,7 @@ public class MenuTracker {
      * Выполнение выбранного пункта меню
      */
     public void select(int key) {
-        this.actions[key].execute(this.input, this.tracker);
+        this.actions.get(key).execute(this.input, this.tracker);
     }
 
     /**
@@ -54,13 +57,13 @@ public class MenuTracker {
      */
     public void fillActions() {
         int key = 0;
-        this.actions[key] = this.new AddItem(key++, "Add new Item");
-        this.actions[key] = this.new ShowAllItems(key++, "Show all items");
-        this.actions[key] = new MenuTracker.EditItem(key++, "Edit item");
-        this.actions[key] = new DeleteItem(key++, "Delete item");
-        this.actions[key] = this.new FindById(key++, "Find item by id");
-        this.actions[key] = this.new FindByName(key++, "Find item by name");
-        this.actions[key] = this.new Exit(key++, "Exit");
+        this.actions.add(this.new AddItem(key++, "Add new Item"));
+        this.actions.add(this.new ShowAllItems(key++, "Show all items"));
+        this.actions.add(new MenuTracker.EditItem(key++, "Edit item"));
+        this.actions.add(new DeleteItem(key++, "Delete item"));
+        this.actions.add(this.new FindById(key++, "Find item by id"));
+        this.actions.add(this.new FindByName(key++, "Find item by name"));
+        this.actions.add(this.new Exit(key++, "Exit"));
     }
 
     /**
@@ -79,8 +82,8 @@ public class MenuTracker {
      * Вывод на консоль списка заявок
      * @param items массив заявок для вывода
      */
-    private void showAllItems(Item[] items) {
-        if (items.length == 0) {
+    private void showAllItems(List<Item> items) {
+        if (items.size() == 0) {
             System.out.println("Заявок нет");
         } else {
             System.out.println("*");
@@ -139,7 +142,7 @@ public class MenuTracker {
         public void execute(Input input, Tracker tracker) {
             System.out.println("------------ Редактирование заявки ------------");
             String id = input.ask("Введите id заявки : ");
-            if (tracker.findById(id) instanceof EmptyItem) {
+            if (!tracker.findById(id).isPresent()) {
                 System.out.println("Заявки с заданным id не существует");
             } else {
                 String name = input.ask("Введите новое имя заявки : ");
@@ -164,7 +167,11 @@ public class MenuTracker {
         public void execute(Input input, Tracker tracker) {
             System.out.println("------------ Найти заявку по id ------------");
             String id = input.ask("Введите id заявки : ");
-            System.out.println(tracker.findById(id));
+            if (tracker.findById(id).isPresent()) {
+                System.out.println(tracker.findById(id).get());
+            } else {
+                System.out.println("Заявки не существует");
+            }
         }
     }
 
@@ -214,7 +221,7 @@ class DeleteItem extends BaseAction {
     public void execute(Input input, Tracker tracker) {
         System.out.println("------------ Удаление заявки ------------");
         String id = input.ask("Введите id заявки : ");
-        if (tracker.findById(id) instanceof EmptyItem) {
+        if (!tracker.findById(id).isPresent()) {
             System.out.println("Заявки с заданным id не существует");
         } else {
             tracker.delete(id);
