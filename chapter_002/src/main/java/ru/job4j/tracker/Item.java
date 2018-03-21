@@ -1,5 +1,6 @@
 package ru.job4j.tracker;
 
+import java.util.List;
 import java.util.StringJoiner;
 
 /**
@@ -18,7 +19,7 @@ public class Item {
     /** Дата создания */
     private long created;
     /** Список комментариев */
-    private String[] comments;
+    private List<String> comments;
 
     /**
      * Конструктор - создание нового объекта

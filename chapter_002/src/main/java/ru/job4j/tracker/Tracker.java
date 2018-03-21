@@ -10,7 +10,7 @@ import java.util.*;
 public class Tracker {
     /** ГСЧ для генерации идентификаторов заявок */
     private static final Random RN = new Random();
-    /** Массив заявок */
+    /** Список заявок */
     private final List<Item> items = new ArrayList<>();
 
     /**

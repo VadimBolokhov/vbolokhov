@@ -30,7 +30,7 @@ public class MenuTracker {
     }
 
     /**
-     * Получить массив пунктов меню
+     * Получить список пунктов меню
      * @return все пункты меню
      */
     public List<UserAction> getActions() {
@@ -53,7 +53,7 @@ public class MenuTracker {
     }
 
     /**
-     * Заполняет массив пунктов меню
+     * Заполняет список пунктов меню
      */
     public void fillActions() {
         int key = 0;
@@ -80,7 +80,7 @@ public class MenuTracker {
 
     /**
      * Вывод на консоль списка заявок
-     * @param items массив заявок для вывода
+     * @param items список заявок для вывода
      */
     private void showAllItems(List<Item> items) {
         if (items.size() == 0) {

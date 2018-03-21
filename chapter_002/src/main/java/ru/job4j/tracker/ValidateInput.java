@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import java.util.List;
+
 /**
  * Проверка корректности ввода пользователя.
  * @author Vadim Bolokhov
@@ -23,7 +25,7 @@ public class ValidateInput implements Input {
     }
 
     @Override
-    public int ask(String question, int[] range) {
+    public int ask(String question, List<Integer> range) {
         boolean valid = false;
         int key = -1;
         while (!valid) {

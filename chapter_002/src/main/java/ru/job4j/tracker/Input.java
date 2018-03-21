@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import java.util.List;
+
 /**
  * Интерфейс ввода.
  * @author Vadim Bolokhov
@@ -9,10 +11,10 @@ package ru.job4j.tracker;
 public interface Input {
     /**
      * Осуществляет диалог программы с пользователем
-     * @param quesiton сообщение для пользователя
+     * @param question сообщение для пользователя
      * @return ответ пользователя
      */
-    String ask(String quesiton);
+    String ask(String question);
 
     /**
      * Осуществляет диалог программы с пользователем, а также проверяет
@@ -21,5 +23,5 @@ public interface Input {
      * @param range диапазон для проверки
      * @return ответ пользователя
      */
-    int ask(String question, int[] range);
+    int ask(String question, List<Integer> range);
 }

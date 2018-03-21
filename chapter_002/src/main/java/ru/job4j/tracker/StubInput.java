@@ -1,5 +1,8 @@
 package ru.job4j.tracker;
 
+import java.util.List;
+import java.util.ListIterator;
+
 /**
  * Замена ввода пользователя.
  * @author Vadim Bolokhov
@@ -8,26 +11,30 @@ package ru.job4j.tracker;
  */
 public class StubInput implements Input {
     /** Это поле содержит последовательность ответов пользователя */
-    private final String[] value;
+    private final List<String> value;
     /** Поле считает количество вызовов метода ask */
     private int position;
 
+
+    private ListIterator<String> it;
+
     /**
      * Конструктор - создание нового объекта с параметром
-     * @param value массив ответов пользователя
+     * @param value список ответов пользователя
      */
-    public StubInput(final String[] value) {
+    public StubInput(final List<String> value) {
         this.value = value;
+        it = value.listIterator();
     }
 
     @Override
     public String ask(String quesiton) {
-        return this.value[this.position++];
+        return this.it.next();
     }
 
     @Override
-    public int ask(String question, int[] range) {
-        int key = Integer.valueOf(this.value[this.position++]);
+    public int ask(String question, List<Integer> range) {
+        int key = Integer.valueOf(this.it.next());
         boolean exist = false;
         for (int i : range) {
             if (key == i) {
@@ -35,10 +42,9 @@ public class StubInput implements Input {
                 break;
             }
         }
-        if (exist) {
-            return key;
-        } else {
+        if (!exist) {
             throw new MenuOutException("Пункта меню не существует");
         }
+        return key;
     }
 }

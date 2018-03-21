@@ -1,5 +1,8 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Класс пользовательского интерфейса.
  * @author Vadim Bolokhov
@@ -12,7 +15,7 @@ public class StartUI {
     /** Хранилище заявок */
     private final Tracker tracker;
     /** Ключи пунктов меню */
-    private int[] range;
+    private List<Integer> range;
 
     /**
      * Конструтор инициализирующий поля.
@@ -31,9 +34,9 @@ public class StartUI {
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
         menu.fillActions();
         int key = -1;
-        this.range = new int[menu.getActions().size()];
-        for (int i = 0; i < range.length; i++) {
-            this.range[i] = menu.getActions().get(i).key();
+        this.range = new ArrayList<>();
+        for (UserAction action : menu.getActions()) {
+            this.range.add(action.key());
         }
         while (!menu.getExit()) {
             menu.showMenu();
