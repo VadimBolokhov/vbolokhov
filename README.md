@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/VadimBolokhov/vbolokhov.svg?branch=master)](https://travis-ci.org/VadimBolokhov/vbolokhov)
+[![codecov](https://codecov.io/gh/VadimBolokhov/vbolokhov/branch/master/graph/badge.svg)](https://codecov.io/gh/VadimBolokhov/vbolokhov)
+
 # Репозиторий Вадима Болохова
 
 Я прохожу обучение по курсу Job4j. Планирую его пройти к концу 2018 года.
@@ -5,3 +8,4 @@
 Ссылка на проект: http://job4j.ru/
 
 Ниже находятся наиболее интересные проекты, которые я реализовывал во время обучения.
+
