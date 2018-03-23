@@ -1,0 +1,13 @@
+language: java
+sudo: false
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+# Отправлять уведомление на почту youremail@smtp.ru (Изменить на свою) если сборка упала
+notifications:
+  email:
+    recipients:
+      - wad4@inbox.ru
+    on_success: never # default: change
+    on_failure: always # default: always
