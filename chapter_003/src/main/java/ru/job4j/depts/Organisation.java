@@ -12,14 +12,14 @@ import java.util.List;
  */
 public class Organisation {
     /** Список кодов подразделений организации */
-    private List<String> depts = new ArrayList<>();
+    private List<String[]> depts = new ArrayList<>();
 
     /**
      * Добавить код подразделения
      * @param id код подразделения
      */
     public void addDepartment(String id) {
-        this.depts.add(id);
+        this.depts.add(id.split("\\\\"));
     }
 
     /**
@@ -27,26 +27,45 @@ public class Organisation {
      * @return
      */
     public List<String> getDepts() {
-        return this.depts;
+        List<String> result = new ArrayList<>();
+        for (String[] dept : this.depts) {
+            result.add(String.join("\\", dept));
+        }
+        return result;
     }
 
     /**
-     * Сортирует список подразделений заданным образом
-     * @param ascend true - сортировка по позрастанию,
-     *               false - сортировка по убыванию
+     * Сортирует список подразделений по возрастанию
      */
-    public void sort(boolean ascend) {
-        int direction = ascend ? 1 : -1;
-        this.depts.sort(new Comparator<String>() {
+    public void sortAscending() {
+        this.depts.sort(new Comparator<String[]>() {
             @Override
-            public int compare(String o1, String o2) {
+            public int compare(String[] first, String[] second) {
                 int result = 0;
-                String[] first = o1.split("\\\\");
-                String[] second = o2.split("\\\\");
-                int min = Math.min(first.length, second.length);
-                for (int i = 0; i < min; i++) {
+                int steps = Math.min(first.length, second.length);
+                for (int i = 0; i < steps; i++) {
                     if (!first[i].equals(second[i])) {
-                        result = direction * first[i].compareTo(second[i]);
+                        result = first[i].compareTo(second[i]);
+                        break;
+                    }
+                }
+                return result != 0 ? result : first.length - second.length;
+            }
+        });
+    }
+
+    /**
+     * Сортирует список подразделений по убыванию
+     */
+    public void sortDescending() {
+        this.depts.sort(new Comparator<String[]>() {
+            @Override
+            public int compare(String[] first, String[] second) {
+                int result = 0;
+                int steps = Math.min(first.length, second.length);
+                for (int i = 0; i < steps; i++) {
+                    if (!first[i].equals(second[i])) {
+                        result = second[i].compareTo(first[i]);
                         break;
                     }
                 }
