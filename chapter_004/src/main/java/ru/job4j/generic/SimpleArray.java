@@ -59,6 +59,14 @@ public class SimpleArray<T> implements Iterable<T> {
         this.array[--this.index] = null;
     }
 
+    /**
+     * Возвращает размер коллекции
+     * @return размер коллекции
+     */
+    public int size() {
+        return this.array.length;
+    }
+
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
