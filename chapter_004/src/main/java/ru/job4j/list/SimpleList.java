@@ -42,7 +42,7 @@ public class SimpleList<E> implements SimpleContainer<E> {
 
     @Override
     public E get(int index) {
-        if (index >= this.size) {
+        if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException();
         }
         return (E) this.container[index];
