@@ -65,7 +65,7 @@ public class Organisation {
                 int steps = Math.min(first.length, second.length);
                 for (int i = 0; i < steps; i++) {
                     if (!first[i].equals(second[i])) {
-                        result = second[i].compareTo(first[i]);
+                        result = -first[i].compareTo(second[i]);
                         break;
                     }
                 }
