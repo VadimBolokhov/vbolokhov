@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
  * @version $Id$
  * @since 0.1
  */
-public class PrimeIterator implements Iterator {
+public class PrimeIterator implements Iterator<Integer> {
     /** Целочисленный массив */
     private final int[] numbers;
     /** Текущая позиция итератора */
@@ -62,15 +62,12 @@ public class PrimeIterator implements Iterator {
     }
 
     @Override
-    public Object next() {
-        int result;
-        try {
-            this.setNextPrime();
-            result = this.numbers[this.nextPrime];
-            this.position = this.nextPrime + 1;
-        } catch (IndexOutOfBoundsException e) {
+    public Integer next() {
+        if (!this.hasNext()) {
             throw new NoSuchElementException();
         }
+        int result = this.numbers[this.nextPrime];
+        this.position = this.nextPrime + 1;
         return result;
     }
 }
