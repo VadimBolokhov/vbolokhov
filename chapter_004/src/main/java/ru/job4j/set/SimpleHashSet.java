@@ -92,6 +92,7 @@ public class SimpleHashSet<E> {
             if (item.equals(this.hashArray[i])) {
                 this.hashArray[i] = null;
                 removed = true;
+                this.size--;
                 break;
             }
         }
