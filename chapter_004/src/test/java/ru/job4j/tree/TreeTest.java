@@ -39,6 +39,26 @@ public class TreeTest {
         );
     }
 
+    @Test
+    public void whenTreeIsBinaryThenReturnTrue() {
+        Tree<Integer> tree = new Tree<>(1);
+        tree.add(1, 2);
+        tree.add(1, 3);
+        tree.add(3, 4);
+        assertThat(tree.isBinary(), is(true));
+
+    }
+
+    @Test
+    public void whenTreeIsNotBinaryThenReturnFalse() {
+        Tree<Integer> tree = new Tree<>(1);
+        tree.add(1, 2);
+        tree.add(2, 3);
+        tree.add(2, 4);
+        tree.add(2, 5);
+        assertThat(tree.isBinary(), is(false));
+    }
+
     @Test(expected = NoSuchElementException.class)
     public void whenTreeHasOneItemThenIteratorReturnsSameItem() {
         Tree<Integer> tree = new Tree<>(1);

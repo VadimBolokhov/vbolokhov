@@ -23,6 +23,28 @@ public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
         this.root = new Node<>(root);
     }
 
+    /**
+     * Проверяет является ли дерево двоичным
+     * @return true - если дерево двоичное, false - в противном случае
+     */
+    public boolean isBinary() {
+        boolean result = true;
+        Queue<Node<E>> data = new LinkedList<>();
+        Node<E> current;
+        data.offer(root);
+        while (!data.isEmpty()) {
+            current = data.poll();
+            if (current.leaves().size() > 2) {
+                result = false;
+                break;
+            }
+            for (Node<E> child : current.leaves()) {
+                data.offer(child);
+            }
+        }
+        return result;
+    }
+
     @Override
     public boolean add(E parent, E child) {
         boolean result = false;
