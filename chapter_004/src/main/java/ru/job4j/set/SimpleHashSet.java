@@ -41,7 +41,7 @@ public class SimpleHashSet<E> {
             if (this.hashArray.length == this.size) {
                 this.resize();
             }
-            int index = item.hashCode() % this.hashArray.length;
+            int index = this.indexFor(item, this.hashArray.length);
             this.hashArray[index] = item;
             this.size++;
             added = true;
@@ -50,16 +50,27 @@ public class SimpleHashSet<E> {
     }
 
     /**
+     * Вычисляет номер ячейки массива
+     * @param item заданный элемент
+     * @param length длина массива
+     * @return номер ячейки
+     */
+    private int indexFor(E item, int length) {
+        return Math.abs(item.hashCode()) % length;
+    }
+
+    /**
      * Увеличивает размер массива при заполнении
      */
+    @SuppressWarnings("unchecked")
     private void resize() {
         int newLength = this.hashArray.length == 0 ? DEFAULT_LENGTH
                 : 2 * this.hashArray.length;
         Object[] newArray = new Object[newLength];
-        for (int i = 0; i < this.hashArray.length; i++) {
-            if (this.hashArray[i] != null) {
-                int index = this.hashArray[i].hashCode() % newArray.length;
-                newArray[index] = this.hashArray[i];
+        for (Object item : this.hashArray) {
+            if (item != null) {
+                int index = this.indexFor((E) item, newArray.length);
+                newArray[index] = item;
             }
         }
         this.hashArray = newArray;
@@ -71,14 +82,12 @@ public class SimpleHashSet<E> {
      * @return true - если элемент найден, false - если не найден
      */
     public boolean contains(E item) {
-        boolean contains = false;
-        for (Object object : this.hashArray) {
-            if (object != null && ((E) object).equals(item)) {
-                contains = true;
-                break;
-            }
+        boolean result = false;
+        if (this.hashArray.length != 0) {
+            int index = this.indexFor(item, this.hashArray.length);
+            result = index < this.hashArray.length && item.equals(this.hashArray[index]);
         }
-        return contains;
+        return result;
     }
 
     /**
@@ -88,13 +97,11 @@ public class SimpleHashSet<E> {
      */
     public boolean remove(E item) {
         boolean removed = false;
-        for (int i = 0; i < this.hashArray.length; i++) {
-            if (item.equals(this.hashArray[i])) {
-                this.hashArray[i] = null;
-                removed = true;
-                this.size--;
-                break;
-            }
+        int index = this.indexFor(item, this.hashArray.length);
+        if (item.equals(this.hashArray[index])) {
+            this.hashArray[index] = null;
+            this.size--;
+            removed = true;
         }
         return removed;
     }
