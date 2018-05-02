@@ -1,0 +1,4 @@
+We believe that the Java programming language is a mature language, ready for
+widespread  use.  Nevertheless,  we  expect  some  evolution  of  the  language  in  the
+years  to  come.  We  intend  to  manage  this  evolution  in  a  way  that  is  completely
+compatible with existing applications
