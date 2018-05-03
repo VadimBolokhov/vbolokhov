@@ -58,23 +58,25 @@ public class OrderBook {
      * @param order добавляемая заявка
      */
     private void addAskOrder(Order order) {
-            boolean merged = false;
-            Order current;
-            while (!this.bid.isEmpty()) {
-                current = this.bid.last();
+        boolean merged = false;
+        if (!this.bid.isEmpty()) {
+            Order current = this.bid.last();
+            while (true) {
                 if (current.getPrice() <= order.getPrice()) {
                     merged = this.merge(current, order);
-                    if (merged) {
+                    if (merged || this.bid.isEmpty()) {
                         break;
                     }
+                    current = this.bid.last();
                 } else {
                     this.ask.add(order);
                     break;
                 }
             }
-            if (!merged) {
-                this.ask.add(order);
-            }
+        }
+        if (!merged) {
+            this.ask.add(order);
+        }
     }
 
     /**
@@ -83,17 +85,19 @@ public class OrderBook {
      */
     private void addBidOrder(Order order) {
         boolean merged = false;
-        Order current;
-        while (!this.ask.isEmpty()) {
-            current = this.ask.first();
-            if (current.getPrice() >= order.getPrice()) {
-                merged = this.merge(current, order);
-                if (merged) {
+        if (!this.ask.isEmpty()) {
+            Order current = this.ask.first();
+            while (true) {
+                if (current.getPrice() >= order.getPrice()) {
+                    merged = this.merge(current, order);
+                    if (merged || this.ask.isEmpty()) {
+                        break;
+                    }
+                    current = this.ask.first();
+                } else {
+                    this.bid.add(order);
                     break;
                 }
-            } else {
-                this.bid.add(order);
-                break;
             }
         }
         if (!merged) {
@@ -158,9 +162,8 @@ public class OrderBook {
         orders.addAll(this.ask);
         Order current = orders.pollFirst();
         if (current != null) {
-            Order next;
+            Order next = orders.pollFirst();
             while (true) {
-                next = orders.pollFirst();
                 if (next != null) {
                     if (current.getPrice() == next.getPrice()) {
                         current.setVolume(current.getVolume() + next.getVolume());
@@ -172,6 +175,7 @@ public class OrderBook {
                     result.add(newRaw(current));
                     break;
                 }
+                next = orders.pollFirst();
             }
         }
         return result;
