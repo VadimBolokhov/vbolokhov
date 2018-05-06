@@ -23,12 +23,12 @@ public class PingPong extends Application {
         Group group = new Group();
         Rectangle rect = new Rectangle(50, 100, 10, 10);
         group.getChildren().add(rect);
-        RectangleMove pong = new RectangleMove(rect);
-        new Thread(pong).start();
+        Thread pong = new Thread(new RectangleMove(rect));
+        pong.start();
         stage.setScene(new Scene(group, limitX, limitY));
         stage.setTitle(JOB4J);
         stage.setResizable(false);
         stage.show();
-        stage.setOnCloseRequest(event -> pong.setStop());
+        stage.setOnCloseRequest(event -> pong.interrupt());
     }
 }
