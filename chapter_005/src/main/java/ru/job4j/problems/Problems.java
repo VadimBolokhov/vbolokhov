@@ -44,7 +44,8 @@ public class Problems {
         };
         System.out.format("До перестановок: %d %d%n", this.first, this.second);
         for (int i = 0; i < numThreads; i++) {
-            (threads[i] = new Thread(r)).start();
+            threads[i] = new Thread(r);
+            threads[i].start();
         }
         try {
             for (Thread thread : threads) {
