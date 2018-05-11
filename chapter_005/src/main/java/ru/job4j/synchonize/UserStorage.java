@@ -101,7 +101,7 @@ public class UserStorage {
      * @param id идентификатор
      * @return результат поиска
      */
-    public Optional<User> findById(int id) {
+    public synchronized Optional<User> findById(int id) {
         Optional<User> result = Optional.ofNullable(this.users.get(id));
         return result;
     }
