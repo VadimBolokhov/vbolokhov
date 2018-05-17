@@ -20,7 +20,7 @@ public class Trie {
      * @param word добавляемое слово
      * @param index позиция слова в тексте
      */
-    public void put(String word, Integer index) {
+    public void put(String word, int index) {
         Node current = this.root;
         for (char letter : word.toLowerCase().toCharArray()) {
             if (!current.children.containsKey(letter)) {
