@@ -1,5 +1,8 @@
 package ru.job4j.list;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
+
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -11,18 +14,22 @@ import java.util.NoSuchElementException;
  * @since 0.1
  * @param <E> тип элемента коллекции
  */
+@ThreadSafe
 public class SimpleLinkedList<E> implements SimpleContainer<E> {
     /** Счётчик модификаций связного списка */
     private int modCount = 0;
     /** Количество элементов в списке */
     private int size = 0;
     /** Первый элемент */
+    @GuardedBy("this")
     private Node<E> first;
     /** Последний элемент */
+    @GuardedBy("this")
     private Node<E> last;
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void add(E e) {
+    public synchronized void add(E e) {
         Node<E> link = new Node(e, last, null);
         if (last == null) {
             this.first = link;
@@ -35,7 +42,7 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
     }
 
     @Override
-    public E get(int index) {
+    public synchronized E get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
@@ -50,7 +57,7 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
      * Возвращает последний элемент списка
      * @return последний элемент списка
      */
-    public E getLast() {
+    public synchronized E getLast() {
         E result = null;
         if (this.last != null) {
             result = this.last.item;
@@ -61,7 +68,7 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
     /**
      * Удаляет последний элемент спсика
      */
-    public void removeLast() {
+    public synchronized void removeLast() {
         if (this.last.previous != null) {
             this.last.previous.next = null;
         }
@@ -74,7 +81,7 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
      * Удаляет элемент по индексу
      * @param index номер элемента
      */
-    public void remove(int index) {
+    public synchronized void remove(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
@@ -97,7 +104,7 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
     }
 
     @Override
-    public Iterator<E> iterator() {
+    public synchronized Iterator<E> iterator() {
         return new Iterator<E>() {
             Node<E> position = first;
             int expectedModCount = modCount;
@@ -126,7 +133,7 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
      * Узел связного списка
      * @param <E> тип элемента коллекции
      */
-    private class Node<E> {
+    private static class Node<E> {
         E item;
         Node<E> previous;
         Node<E> next;

@@ -1,5 +1,8 @@
 package ru.job4j.list;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
+
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -11,8 +14,10 @@ import java.util.NoSuchElementException;
  * @version $Id$
  * @since 0.1
  */
+@ThreadSafe
 public class SimpleList<E> implements SimpleContainer<E> {
     /** Массив для хранения элементов */
+    @GuardedBy("this")
     private Object[] container;
     /** Номер ячейки массива, куда будет добавлен слудующий элемент */
     private int size = 0;
@@ -20,6 +25,7 @@ public class SimpleList<E> implements SimpleContainer<E> {
     private static final int DEFAULT_LENGTH = 10;
     /** Счётчик модификаций массива */
     private int modCount = 0;
+
 
     /**
      * Конструктор - создание нового объекта
@@ -29,7 +35,7 @@ public class SimpleList<E> implements SimpleContainer<E> {
     }
 
     @Override
-    public void add(E e) {
+    public synchronized void add(E e) {
         if (this.size == this.container.length - 1) {
             this.container = Arrays.copyOf(
                     this.container,
@@ -40,19 +46,23 @@ public class SimpleList<E> implements SimpleContainer<E> {
         this.modCount++;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public E get(int index) {
+    public synchronized E get(int index) {
         if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException();
         }
-        return (E) this.container[index];
+
+        return  (E) this.container[index];
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Iterator<E> iterator() {
+    public synchronized Iterator<E> iterator() {
         return new Iterator<E>() {
             int expectedModCount = modCount;
             int position = 0;
+            private final Object[] snapshot = container;
 
             @Override
             public boolean hasNext() {
@@ -67,7 +77,7 @@ public class SimpleList<E> implements SimpleContainer<E> {
                 if (position >= size) {
                     throw new NoSuchElementException();
                 }
-                return (E) container[position++];
+                return (E) snapshot[position++];
             }
         };
     }
