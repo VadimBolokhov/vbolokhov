@@ -20,11 +20,13 @@ public class SimpleList<E> implements SimpleContainer<E> {
     @GuardedBy("this")
     private Object[] container;
     /** Номер ячейки массива, куда будет добавлен слудующий элемент */
-    private int size = 0;
+    @GuardedBy("this")
+    private volatile int size = 0;
     /** Размер массива по умолчанию */
     private static final int DEFAULT_LENGTH = 10;
     /** Счётчик модификаций массива */
-    private int modCount = 0;
+    @GuardedBy("this")
+    private volatile int modCount = 0;
 
 
     /**
@@ -52,7 +54,6 @@ public class SimpleList<E> implements SimpleContainer<E> {
         if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException();
         }
-
         return  (E) this.container[index];
     }
 
@@ -61,12 +62,13 @@ public class SimpleList<E> implements SimpleContainer<E> {
     public synchronized Iterator<E> iterator() {
         return new Iterator<E>() {
             int expectedModCount = modCount;
+            int length = size;
             int position = 0;
             private final Object[] snapshot = container;
 
             @Override
             public boolean hasNext() {
-                return position < size;
+                return position < length;
             }
 
             @Override
@@ -74,7 +76,7 @@ public class SimpleList<E> implements SimpleContainer<E> {
                 if (expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                if (position >= size) {
+                if (position >= length) {
                     throw new NoSuchElementException();
                 }
                 return (E) snapshot[position++];

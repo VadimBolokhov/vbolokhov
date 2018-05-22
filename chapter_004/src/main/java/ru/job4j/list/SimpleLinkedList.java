@@ -17,8 +17,10 @@ import java.util.NoSuchElementException;
 @ThreadSafe
 public class SimpleLinkedList<E> implements SimpleContainer<E> {
     /** Счётчик модификаций связного списка */
-    private int modCount = 0;
+    @GuardedBy("this")
+    private volatile int modCount = 0;
     /** Количество элементов в списке */
+    @GuardedBy("this")
     private int size = 0;
     /** Первый элемент */
     @GuardedBy("this")
