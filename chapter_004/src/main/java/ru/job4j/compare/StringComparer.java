@@ -25,30 +25,13 @@ public class StringComparer  {
     }
 
     private boolean compareChars(String first, String second) {
-        boolean result = true;
         HashMap<Character, Integer> map = new HashMap<>();
-        Character letter = first.charAt(0);
-        map.put(letter, 1);
-            for (int i = 1; i < first.length(); i++) {
-                letter = first.charAt(i);
-                if (map.containsKey(letter)) {
-                    map.replace(letter, map.get(letter) + 1);
-                } else {
-                    map.put(letter, 1);
-                }
-            }
-            for (int i = 0; i < second.length(); i++) {
-                letter = second.charAt(i);
-                if (map.containsKey(letter)) {
-                    map.replace(letter, map.get(letter) - 1);
-                    if (map.get(letter) == 0) {
-                        map.remove(letter);
-                    }
-                } else {
-                    result = false;
-                    break;
-                }
-            }
-        return result && map.isEmpty();
+        for (int i = 0; i < first.length(); i++) {
+            map.merge(first.charAt(i), 1, (v1, v2) ->
+                    v1 + v2 == 0 ? null : v1 + v2);
+            map.merge(second.charAt(i), -1, (v1, v2) ->
+                    v1 + v2 == 0 ? null : v1 + v2);
+        }
+        return map.isEmpty();
     }
 }
