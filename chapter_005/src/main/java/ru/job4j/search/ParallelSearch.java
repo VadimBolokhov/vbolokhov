@@ -84,7 +84,7 @@ public class ParallelSearch {
                         }
                     }
                     ready = true;
-                    ParallelSearch.this.notify();
+                    ParallelSearch.this.notifyAll();
                 }
             }
         };
