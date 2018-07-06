@@ -65,13 +65,6 @@ HAVING COUNT(*) < 10;
 -----------------------------------
 -- 8. Вывести все продукты и их тип
 -----------------------------------
-SELECT *
-FROM product INNER JOIN
-(
-  SELECT type_name FROM type
-) AS prod_type
-ON product.type_id =
-(
-  SELECT type_id FROM type
-  WHERE type.type_name = prod_type.type_name  
-);
+SELECT product.*, type.type_name
+FROM product INNER JOIN type
+ON product.type_id = type.type_id;
