@@ -19,6 +19,7 @@
 		<module>chapter_003</module>
         <module>chapter_004</module>
 		<module>chapter_005</module>
+		<module>chapter_006</module>
 	</modules>
 
 	<dependencies>
@@ -38,6 +39,11 @@
 			<groupId>net.jcip</groupId>
 			<artifactId>jcip-annotations</artifactId>
 			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.2</version>
 		</dependency>
 	</dependencies>
 

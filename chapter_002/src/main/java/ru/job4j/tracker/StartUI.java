@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class StartUI {
      * Основной цикл программы
      */
     public void init() {
+        new DBInitializer().initBase(this.tracker.getConnection());
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
         menu.fillActions();
         int key = -1;
@@ -46,6 +49,16 @@ public class StartUI {
     }
 
     public static void main(String[] args) {
-        new StartUI(new ValidateInput(new ConsoleInput()), new Tracker()).init();
+        try {
+            Connection connection = new DBConnector().getConnection();
+            new DBInitializer().initBase(connection);
+            try (Tracker tracker = new Tracker(connection)) {
+                new StartUI(new ValidateInput(new ConsoleInput()), tracker).init();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

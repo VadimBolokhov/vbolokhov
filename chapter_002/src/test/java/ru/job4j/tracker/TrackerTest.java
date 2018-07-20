@@ -1,8 +1,11 @@
 package ru.job4j.tracker;
 
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,110 +18,121 @@ import static org.junit.Assert.*;
  * @version $Id$
  * @since 0.1
  */
+@Ignore
 public class TrackerTest {
-    /**
-     * Тест метода add()
-     */
-    @Test
-    public void whenAddNewItemThenTrackerHasSameItem() {
-        Tracker tracker = new Tracker();
-        Item item = new Item("test1", "testDescription", 123L);
-        tracker.add(item);
-        assertThat(tracker.getAll().get(0), is(item));
-    }
+    private Connection connection;
 
     /**
-     * Тест метода delete()
+     * Замена стандартного вывода на вывод в память
      */
-    @Test
-    public void whenDeleteItemThenTrackerHasNoSameItem() {
-        Tracker tracker = new Tracker();
-        Item item = new Item("test1", "testDescription", 123L);
-        tracker.add(item);
-        String id = tracker.getAll().get(0).getId();
-        tracker.delete(id);
-        List<Item> result = tracker.getAll();
-        List<Item> expected = new ArrayList<>();
-        assertThat(result, is(expected));
+    @Before
+    public void loadOut() {
+        try {
+            this.connection = new DBConnector().getConnection();
+            new DBInitializer().initBase(this.connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    /**
-     * Тест метода findById() для случая, когда элемент найден
-     */
     @Test
-    public void whenFindByIdExistingItemThenReturnItem() {
-        Tracker tracker = new Tracker();
-        Item item = new Item("test1", "testDescription", 123L);
-        tracker.add(item);
-        Item expected = tracker.getAll().get(0);
-        String id = expected.getId();
-        Item result = tracker.findById(id).get();
-        assertThat(result, is(item));
+    public void whenAddNewItemThenTrackerHasSameItem() throws Exception {
+        try (Tracker tracker = new Tracker(this.connection)) {
+            Item item = new Item("test1", "testDescription");
+            tracker.add(item);
+            List<Item> result = tracker.getAll();
+            tracker.delete(item.getId());
+            assertThat(result.get(result.size() - 1), is(item));
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    /**
-     * Тест метода findById() для случая, когда элемент отсутствует
-     */
     @Test
-    public void whenFindByIdUnexistingItemThenReturnNull() {
-        Tracker tracker = new Tracker();
-        Item item = new Item("test2", "testDescription", 123L);
-        tracker.add(item);
-        String id = tracker.getAll().get(0).getId() + "0";
-        Optional<Item> result = tracker.findById(id);
-        assertFalse(result.isPresent());
+    public void whenFindByIdExistingItemThenReturnItem() throws Exception {
+        try (Tracker tracker = new Tracker(this.connection)) {
+            Item item = new Item("test2", "testDescription");
+            tracker.add(item);
+            int lastIndex = tracker.getAll().size() - 1;
+            Item expected = tracker.getAll().get(lastIndex);
+            String id = expected.getId();
+
+            Item result = tracker.findById(id).get();
+            tracker.delete(item.getId());
+
+            assertThat(result, is(item));
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    /**
-     * Тест метода replace()
-     */
     @Test
-    public void whenReplaceItemThenItemIsReplaced() {
-        Tracker tracker = new Tracker();
-        Item item = new Item("test1", "testDescription", 123L);
-        Item replace = new Item("test2", "testDescription", 456L);
-        tracker.add(item);
-        String itemId = tracker.getAll().get(0).getId();
-        tracker.replace(itemId, replace);
-        assertTrue(tracker.getAll().contains(replace));
+    public void whenFindByIdUnexistingItemThenReturnNull() throws Exception {
+        try (Tracker tracker = new Tracker(this.connection)) {
+            Item item = new Item("test3", "testDescription");
+            tracker.add(item);
+            int lastIndex = tracker.getAll().size() - 1;
+            Item expected = tracker.getAll().get(lastIndex);
+            String id = expected.getId();
+
+            Optional<Item> result = tracker.findById(id + "999");
+            tracker.delete(item.getId());
+
+            assertThat(result.isPresent(), is(false));
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    /**
-     * Тест метода gatAll()
-     */
     @Test
-    public void whenGetAllItemsThenReturnAllItems() {
-        Tracker tracker = new Tracker();
-        Item item1 = new Item("test1", "testDescription", 123L);
-        Item item2 = new Item("test2", "testDescription", 456L);
-        tracker.add(item1);
-        tracker.add(item2);
-        List<Item> result = tracker.getAll();
-        assertTrue(result.contains(item1));
-        assertTrue(result.contains(item2));
+    public void whenDeleteItemThenTrackerHasNoSameItem() throws Exception {
+        try (Tracker tracker = new Tracker(this.connection)) {
+            Item item = new Item("test4", "testDescription");
+            tracker.add(item);
+            int lastIndex = tracker.getAll().size() - 1;
+            String id = tracker.getAll().get(lastIndex).getId();
+            tracker.delete(id);
+            Optional<Item> result = tracker.findById(id);
+            assertThat(result.isPresent(), is(false));
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    /**
-     * Тест метода findById() для случая, когда заявка найдена
-     */
     @Test
-    public void whenFindByNameExistingItemThenReturnItem() {
-        Tracker tracker = new Tracker();
-        Item item = new Item("test1", "testDescription", 123L);
-        tracker.add(item);
-        Item result = tracker.findByName("test1").get(0);
-        assertThat(result, is(item));
+    public void whenFindByNameExistingItemThenReturnItem() throws Exception {
+        try (Tracker tracker = new Tracker(this.connection)) {
+            Item item = new Item("test1", "testDescription");
+            tracker.add(item);
+            List<Item> items = tracker.findByName("test1");
+            int lastIndex = items.size() - 1;
+
+            Item result = items.get(lastIndex);
+            tracker.delete(item.getId());
+
+            assertThat(result, is(item));
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    /**
-     * Тест метода findById() для случая, когда заявка отсутствует
-     */
     @Test
-    public void whenFindByNameUnexistingItemThenReturnEmptyArray() {
-        Tracker tracker = new Tracker();
-        Item item = new Item("test1", "testDescription", 123L);
-        tracker.add(item);
-        List<Item> result = tracker.findByName("test2");
-        assertTrue(result.isEmpty());
+    public void whenReplaceItemThenItemIsReplaced() throws Exception {
+        try (Tracker tracker = new Tracker(this.connection)) {
+            Item item = new Item("test1", "testDescription1");
+            Item replace = new Item("test2", "testDescription2");
+            tracker.add(item);
+            int lastIndex = tracker.getAll().size() - 1;
+            String itemId = tracker.getAll().get(lastIndex).getId();
+
+            tracker.replace(itemId, replace);
+            Item result = tracker.findById(itemId).get();
+            tracker.delete(item.getId());
+
+            assertThat(result.getName(), is(replace.getName()));
+            assertThat(result.getDesc(), is(replace.getDesc()));
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }
