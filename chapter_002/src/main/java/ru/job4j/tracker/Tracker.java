@@ -13,8 +13,6 @@ import static ru.job4j.tracker.SQLScript.*;
 public class Tracker implements AutoCloseable {
     /** Соединение с базой данных */
     private Connection connection;
-    /** Скрипт для работы с базой данных */
-    private PreparedStatement statement;
 
     Tracker() {
         try {
@@ -34,46 +32,22 @@ public class Tracker implements AutoCloseable {
      * @return добавленная заявка
      */
     public Item add(Item item) {
-        try {
-            insertItem(item);
-            setNewItemID(item);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            this.closeStatement();
-        }
-        return item;
-    }
-
-    private void insertItem(Item item) throws SQLException {
         String insert = new SQLScript().insert();
-        this.statement = this.connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
-        this.statement.setString(1, item.getName());
-        this.statement.setString(2, item.getDesc());
-        this.statement.executeUpdate();
-    }
-
-    private void setNewItemID(Item item) throws SQLException {
-        ResultSet keys = null;
-        try {
-            keys = this.statement.getGeneratedKeys();
-            keys.next();
-            int id = keys.getInt(1);
-            item.setId(String.valueOf(id));
-        } finally {
-            this.closeResultSet(keys);
-        }
-    }
-
-    private void closeStatement() {
-        try {
-            if (this.statement != null) {
-                this.statement.close();
-                this.statement = null;
+        try (PreparedStatement ps = this.connection.prepareStatement(
+                insert,
+                Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, item.getName());
+            ps.setString(2, item.getDesc());
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                rs.next();
+                int id = rs.getInt(1);
+                item.setId(String.valueOf(id));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return item;
     }
 
     /**
@@ -83,16 +57,13 @@ public class Tracker implements AutoCloseable {
      */
     public void replace(String id, Item replace) {
         String replaceItem = new SQLScript().replace();
-        try {
-            this.statement = this.connection.prepareStatement(replaceItem);
-            this.statement.setString(1, replace.getName());
-            this.statement.setString(2, replace.getDesc());
-            this.statement.setInt(3, Integer.parseInt(id));
-            this.statement.executeUpdate();
+        try (PreparedStatement ps = this.connection.prepareStatement(replaceItem)) {
+            ps.setString(1, replace.getName());
+            ps.setString(2, replace.getDesc());
+            ps.setInt(3, Integer.parseInt(id));
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            this.closeStatement();
         }
     }
 
@@ -101,15 +72,12 @@ public class Tracker implements AutoCloseable {
      * @param id идентификатор заявки
      */
     public void delete(String id) {
-        try {
-            String delete = new SQLScript().delete();
-            this.statement = this.connection.prepareStatement(delete);
-            this.statement.setInt(1, Integer.parseInt(id));
-            this.statement.executeUpdate();
+        String delete = new SQLScript().delete();
+        try (PreparedStatement ps = this.connection.prepareStatement(delete)) {
+            ps.setInt(1, Integer.parseInt(id));
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            this.closeStatement();
         }
     }
 
@@ -119,23 +87,14 @@ public class Tracker implements AutoCloseable {
      */
     public List<Item> getAll() {
         List<Item> items = new LinkedList<>();
-        ResultSet data = null;
-        try {
-            data = this.fetchData();
+        String getItems = new SQLScript().getItems();
+        try (PreparedStatement ps = this.connection.prepareStatement(getItems);
+                ResultSet data = ps.executeQuery()) {
             items = this.convertToList(data);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            this.closeResultSet(data);
-            this.closeStatement();
         }
         return items;
-    }
-
-    private ResultSet fetchData() throws SQLException {
-        String getItems = new SQLScript().getItems();
-        this.statement = this.connection.prepareStatement(getItems);
-        return statement.executeQuery();
     }
 
     private List<Item> convertToList(ResultSet data) throws SQLException {
@@ -156,16 +115,6 @@ public class Tracker implements AutoCloseable {
         return item;
     }
 
-    private void closeResultSet(ResultSet data) {
-        try {
-            if (data != null) {
-                data.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
      /**
      * Находит все заявки с заданным именем
      * @param key имя для поиска
@@ -173,51 +122,35 @@ public class Tracker implements AutoCloseable {
      */
     public List<Item> findByName(String key) {
         List<Item> items = new ArrayList<>();
-        ResultSet data = null;
-        try {
-            data = fetchDataByName(key);
-            items = this.convertToList(data);
+        String findByName = new SQLScript().findByName();
+        try (PreparedStatement ps = this.connection.prepareStatement(findByName)) {
+            ps.setString(1, key);
+            try (ResultSet rs = ps.executeQuery()) {
+                items = this.convertToList(rs);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            this.closeResultSet(data);
-            this.closeStatement();
         }
         return items;
     }
 
-    private ResultSet fetchDataByName(String name) throws SQLException {
-        String findByName = new SQLScript().findByName();
-        this.statement = this.connection.prepareStatement(findByName);
-        this.statement.setString(1, name);
-        return this.statement.executeQuery();
-    }
-
-    /**
+     /**
      * Поиск заявки по идентификатору
      * @param id идентификатор
      * @return результат поиска
      */
     public Optional<Item> findById(String id) {
         Item result = null;
-        ResultSet data = null;
-        try {
-            data = fetchDataById(id);
-            result = convertToItem(data);
+        String find = new SQLScript().findById();
+        try (PreparedStatement ps = this.connection.prepareStatement(find)) {
+            ps.setInt(1, Integer.parseInt(id));
+            try (ResultSet rs = ps.executeQuery()) {
+                result = convertToItem(rs);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            this.closeResultSet(data);
-            this.closeStatement();
         }
         return Optional.ofNullable(result);
-    }
-
-    private ResultSet fetchDataById(String id) throws SQLException {
-        String find = new SQLScript().findById();
-        this.statement = this.connection.prepareStatement(find);
-        this.statement.setInt(1, Integer.parseInt(id));
-        return this.statement.executeQuery();
     }
 
     private Item convertToItem(ResultSet data) throws SQLException {
