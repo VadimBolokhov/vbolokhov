@@ -20,7 +20,7 @@ import java.util.function.Function;
  */
 public class UserServlet extends HttpServlet {
     /** Input validation */
-    private final ValidateService validateService = ValidateService.getInstance();
+    private final ValidateService validateService = ValidateService.INSTANCE;
     /** Action dispatcher */
     private final Map<String, Function<User, String>> dispatch = new HashMap<>();
 

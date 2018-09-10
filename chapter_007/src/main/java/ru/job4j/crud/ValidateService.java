@@ -9,34 +9,21 @@ import java.util.Optional;
  * @version $Id$
  * @since 0.1
  */
-public class ValidateService {
+public enum ValidateService {
     /** Singleton instance */
-    private static ValidateService instance;
+    INSTANCE;
     /** User store */
-    private final Store store = MemoryStore.getInstance();
+    private final Store store = MemoryStore.INSTANCE;
     /** Next id to be generated */
     private int nextId = 1;
     private static final String NOT_EXISTS = "User does not exist.";
-
-    private ValidateService() { }
-
-    /**
-     * To be called by user to obtain instance of the class
-     * @return instance of the singleton
-     */
-    public static ValidateService getInstance() {
-        if (instance == null) {
-            instance = new ValidateService();
-        }
-        return instance;
-    }
 
     /**
      * Validate input and add new user to store
      * @param user user to be added
      * @return message
      */
-    public String add(User user) {
+    public synchronized String add(User user) {
         String message = "Login is not set.";
         if (user.getLogin() != null) {
             message = addUserIfNotExists(user);
@@ -78,7 +65,7 @@ public class ValidateService {
      * @param user user to be updated
      * @return message
      */
-    public String update(User user) {
+    public synchronized String update(User user) {
         String message = NOT_EXISTS;
         String id = user.getId();
         if (id != null && this.userIdExists(id)) {
@@ -93,7 +80,7 @@ public class ValidateService {
      * @param user user to be deleted
      * @return message
      */
-    public String delete(User user) {
+    public synchronized String delete(User user) {
         String message = NOT_EXISTS;
         String id = user.getId();
         if (id != null && this.userIdExists(id)) {
@@ -107,7 +94,7 @@ public class ValidateService {
      * Return all users
      * @return user list
      */
-    public List<User> findAll() {
+    public synchronized List<User> findAll() {
         return this.store.findAll();
     }
 
@@ -116,7 +103,7 @@ public class ValidateService {
      * @param id user id
      * @return user (if found)
      */
-    public Optional<User> findById(String id) {
+    public synchronized Optional<User> findById(String id) {
         return this.store.findById(id);
     }
 }

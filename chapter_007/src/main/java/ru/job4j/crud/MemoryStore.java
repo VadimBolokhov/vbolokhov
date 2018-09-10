@@ -12,24 +12,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version $Id$
  * @since 0.1
  */
-public class MemoryStore implements Store {
+public enum MemoryStore implements Store {
+    /** Singleton instance */
+    INSTANCE;
     /** User store */
     private final Map<String, User> users = new ConcurrentHashMap<>();
-    /** Singleton instance */
-    private static MemoryStore instance;
-
-    private MemoryStore() { }
-
-    /**
-     * To be called by user to obtain instance of the class
-     * @return instance of the singleton
-     */
-    public static MemoryStore getInstance() {
-        if (instance == null) {
-            instance = new MemoryStore();
-        }
-        return instance;
-    }
 
     @Override
     public void add(User user) {
