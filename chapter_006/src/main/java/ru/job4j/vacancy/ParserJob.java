@@ -39,7 +39,7 @@ public class ParserJob implements Job {
             updateAppConfig(appConfigPath);
             logger.info("Update success.");
         } catch (Exception e) {
-            throw new JobExecutionException(e.getMessage());
+            throw new JobExecutionException(e.getMessage(), e);
         }
     }
 
