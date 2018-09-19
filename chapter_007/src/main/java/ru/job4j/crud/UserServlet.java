@@ -80,6 +80,6 @@ public class UserServlet extends HttpServlet {
     public void init() throws ServletException {
         this.dispatch.put("add", this.validateService::add);
         this.dispatch.put("update", this.validateService::update);
-        this.dispatch.put("delete", this.validateService::delete);
+        this.dispatch.put("delete", user -> this.validateService.delete(user.getId()));
     }
 }

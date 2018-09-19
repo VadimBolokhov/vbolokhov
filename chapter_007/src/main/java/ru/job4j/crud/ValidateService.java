@@ -25,10 +25,14 @@ public enum ValidateService {
      */
     public synchronized String add(User user) {
         String message = "Login is not set.";
-        if (user.getLogin() != null) {
+        if (this.isNotEmptyLogin(user)) {
             message = addUserIfNotExists(user);
         }
         return message;
+    }
+
+    private boolean isNotEmptyLogin(User user) {
+        return user.getLogin() != null && !user.getLogin().equals("");
     }
 
     private String addUserIfNotExists(User user) {
@@ -77,12 +81,11 @@ public enum ValidateService {
 
     /**
      * Validate input and delete user from the store
-     * @param user user to be deleted
+     * @param id user to be deleted
      * @return message
      */
-    public synchronized String delete(User user) {
+    public synchronized String delete(String id) {
         String message = NOT_EXISTS;
-        String id = user.getId();
         if (id != null && this.userIdExists(id)) {
             this.store.delete(id);
             message = "User has been deleted.";
