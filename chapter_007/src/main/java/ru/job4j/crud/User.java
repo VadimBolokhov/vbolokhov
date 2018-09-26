@@ -19,13 +19,18 @@ public class User {
     /** User's e-mail */
     private String email;
     /** Creation date*/
-    private LocalDate createDate = LocalDate.now();
+    private LocalDate createDate;
 
     public User(String id, String name, String login, String email) {
+        this(id, name, login, email, LocalDate.now());
+    }
+
+    public User(String id, String name, String login, String email, LocalDate createDate) {
         this.id = id;
         this.name = name;
         this.login = login;
         this.email = email;
+        this.createDate = createDate;
     }
 
     public String getId() {

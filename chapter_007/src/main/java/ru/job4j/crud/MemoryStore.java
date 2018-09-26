@@ -17,11 +17,19 @@ public enum MemoryStore implements Store {
     INSTANCE;
     /** User store */
     private final Map<String, User> users = new ConcurrentHashMap<>();
+    /** Next id to be generated */
+    private int nextId = 1;
 
     @Override
-    public void add(User user) {
-        String id = user.getId();
+    public User add(User user) {
+        String id = this.generateId();
+        user.setId(id);
         this.users.put(id, user);
+        return user;
+    }
+
+    private String generateId() {
+        return String.valueOf(this.nextId++);
     }
 
     @Override

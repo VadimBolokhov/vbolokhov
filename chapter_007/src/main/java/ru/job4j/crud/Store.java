@@ -15,7 +15,7 @@ public interface Store {
      * Add user to the store
      * @param user user to be added
      */
-    void add(User user);
+    User add(User user);
 
     /**
      * Update user

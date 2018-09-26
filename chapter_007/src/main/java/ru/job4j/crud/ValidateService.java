@@ -14,8 +14,7 @@ public enum ValidateService {
     INSTANCE;
     /** User store */
     private final Store store = MemoryStore.INSTANCE;
-    /** Next id to be generated */
-    private int nextId = 1;
+
     private static final String NOT_EXISTS = "User does not exist.";
 
     /**
@@ -50,14 +49,9 @@ public enum ValidateService {
     }
 
     private String addNewUser(User user) {
-        String newId = this.generateId();
-        user.setId(newId);
-        this.store.add(user);
+        User newUser = this.store.add(user);
+        String newId = newUser.getId();
         return String.format("New user with id = %s has been added.", newId);
-    }
-
-    private String generateId() {
-        return String.valueOf(this.nextId++);
     }
 
     private boolean userIdExists(String id) {
