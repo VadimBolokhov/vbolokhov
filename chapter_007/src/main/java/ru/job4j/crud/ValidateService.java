@@ -13,7 +13,7 @@ public enum ValidateService {
     /** Singleton instance */
     INSTANCE;
     /** User store */
-    private final Store store = MemoryStore.INSTANCE;
+    private final Store store = DBStore.getInstance();
 
     private static final String NOT_EXISTS = "User does not exist.";
 
