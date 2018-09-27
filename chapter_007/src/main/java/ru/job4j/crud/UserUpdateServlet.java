@@ -22,7 +22,7 @@ public class UserUpdateServlet extends HttpServlet {
         String id = req.getParameter("id");
         User user = this.validator.findById(id).get();
         req.setAttribute("user", user);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("update-form.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/update-form.jsp");
         dispatcher.forward(req, resp);
     }
 
@@ -31,7 +31,7 @@ public class UserUpdateServlet extends HttpServlet {
         User user = this.createUserWithId(req);
         String message = this.validator.update(user);
         req.setAttribute("message", message);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("update-user.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/update-user.jsp");
         dispatcher.forward(req, resp);
     }
 

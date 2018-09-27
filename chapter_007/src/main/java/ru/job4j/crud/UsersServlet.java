@@ -24,7 +24,7 @@ public class UsersServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
         List<User> users = this.validator.findAll();
         req.setAttribute("users", users);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("user-list.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/user-list.jsp");
         dispatcher.forward(req, resp);
     }
 
