@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class UserUpdateServlet extends HttpServlet {
     /** Input validation */
-    private ValidateService validator = ValidateService.INSTANCE;
+    private final ValidateService validator = ValidateService.INSTANCE;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

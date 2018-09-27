@@ -18,7 +18,7 @@ public class DBStore implements Store {
     /** Database connection pool */
     private static final BasicDataSource SOURCE = new BasicDataSource();
     /** Singleton instance */
-    private static DBStore INSTANCE = new DBStore();
+    private static final DBStore INSTANCE = new DBStore();
 
     public DBStore() {
         SOURCE.setDriverClassName("org.postgresql.Driver");
