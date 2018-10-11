@@ -1,4 +1,4 @@
-package ru.job4j.crud;
+package ru.job4j.crud.models;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +14,7 @@ public enum ValidateService {
     INSTANCE;
     /** User store */
     private final Store store = DBStore.getInstance();
-
+    /** "User does not exist" message */
     private static final String NOT_EXISTS = "User does not exist.";
 
     /**

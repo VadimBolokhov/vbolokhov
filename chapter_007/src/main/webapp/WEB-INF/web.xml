@@ -4,6 +4,16 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
+
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>ru.job4j.crud.filters.AuthorizationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>EchoServlet</servlet-name>
         <servlet-class>ru.job4j.servlets.EchoServlet</servlet-class>
@@ -15,7 +25,7 @@
 
     <servlet>
         <servlet-name>UserServlet</servlet-name>
-        <servlet-class>ru.job4j.crud.UserServlet</servlet-class>
+        <servlet-class>ru.job4j.crud.controllers.UserServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
@@ -24,7 +34,7 @@
 
     <servlet>
         <servlet-name>UsersServlet</servlet-name>
-        <servlet-class>ru.job4j.crud.UsersServlet</servlet-class>
+        <servlet-class>ru.job4j.crud.controllers.UsersServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UsersServlet</servlet-name>
@@ -33,7 +43,7 @@
 
     <servlet>
         <servlet-name>UserCreateServlet</servlet-name>
-        <servlet-class>ru.job4j.crud.UserCreateServlet</servlet-class>
+        <servlet-class>ru.job4j.crud.controllers.UserCreateServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserCreateServlet</servlet-name>
@@ -42,11 +52,28 @@
 
     <servlet>
         <servlet-name>UserUpdateServlet</servlet-name>
-        <servlet-class>ru.job4j.crud.UserUpdateServlet</servlet-class>
+        <servlet-class>ru.job4j.crud.controllers.UserUpdateServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserUpdateServlet</servlet-name>
         <url-pattern>/edit</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>UserSigninServlet</servlet-name>
+        <servlet-class>ru.job4j.crud.controllers.SignInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserSigninServlet</servlet-name>
+        <url-pattern>/signin</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UserSignoutServlet</servlet-name>
+        <servlet-class>ru.job4j.crud.controllers.SignOutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserSignoutServlet</servlet-name>
+        <url-pattern>/signout</url-pattern>
+    </servlet-mapping>
 </web-app>

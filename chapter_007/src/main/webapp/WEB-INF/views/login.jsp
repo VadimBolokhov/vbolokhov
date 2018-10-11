@@ -2,10 +2,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <title>User creation</title>
+    <title>Login page</title>
 </head>
 <body>
-<form action='${pageContext.servletContext.contextPath}/create' method='post'>
+<c:if test="${error != ''}">
+    <div style="background-color: red">
+        <c:out value="${error}"/>
+    </div>
+</c:if>
+<form action="${pageContext.servletContext.contextPath}/signin" method="post">
     <table>
         <tr>
             <td>Login:</td>
@@ -15,16 +20,7 @@
             <td>Password:</td>
             <td><input type='password' name='password' size='20'/></td>
         </tr>
-        <tr>
-            <td>Name:</td>
-            <td><input type='text' name='name' size='20'/></td>
-        </tr>
-        <tr>
-            <td>E-mail:</td>
-            <td><input type='text' name='email' size='20'/></td>
-        </tr>
     </table>
-    <input type='hidden' name='role' value='USER'/>
     <input type='submit' value='Submit'/>
 </form>
 </body>

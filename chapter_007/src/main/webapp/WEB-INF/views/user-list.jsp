@@ -5,8 +5,9 @@
     <title>User list</title>
 </head>
 <body>
+<c:if test='${sessionScope.role != "ADMIN"}' var='notAdmin'/>
 <table>
-    <tr><th>ID</th><th>Login</th><th>Name</th><th>E-mail</th><th>Creation date</th></tr>
+    <tr><th>ID</th><th>Login</th><th>Name</th><th>E-mail</th><th>Creation date</th><th>Role</th></tr>
     <c:forEach var='user' items='${requestScope.users}'>
         <c:set var='id' value='${user.id}'/>
         <tr>
@@ -15,16 +16,18 @@
             <td><c:out value='${user.name}'/></td>
             <td><c:out value='${user.email}'/></td>
             <td><c:out value='${user.createDate}'/></td>
+            <td><c:out value='${user.role}'/></td>
             <td>
                 <form action='${pageContext.servletContext.contextPath}/edit' method='get'>
                     <input type='hidden' name='id' value='${id}'/>
-                    <input type='submit' value='Edit'/>
+                    <input type='submit' value='Edit'
+                        ${(notAdmin && user.login != sessionScope.login) ? 'disabled' : ''} />
                 </form>
             </td><td>
             <form action='${pageContext.servletContext.contextPath}/list' method='post'>
                 <input type='hidden' name='id' value='${id}'/>
                 <input type='hidden' name='action' value='delete'/>
-                <input type='submit' value='X'/>
+                <input type='submit' value='X' ${notAdmin ? 'disabled' : ''}/>
             </form>
         </td>
         </tr>
@@ -37,5 +40,8 @@
         </td>
     </tr>
 </table>
+<form action="${pageContext.servletContext.contextPath}/signout" method="post">
+    <input type="submit" value="Log out"/>
+</form>
 </body>
 </html>

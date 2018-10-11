@@ -1,4 +1,7 @@
-package ru.job4j.crud;
+package ru.job4j.crud.controllers;
+
+import ru.job4j.crud.models.User;
+import ru.job4j.crud.models.ValidateService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,6 +38,7 @@ public class UsersServlet extends HttpServlet {
         if (action.equals("delete")) {
             this.validator.delete(id);
         }
-        resp.sendRedirect(req.getContextPath() + "/list");
+        doGet(req, resp);
+        //resp.sendRedirect(req.getContextPath() + "/list");
     }
 }

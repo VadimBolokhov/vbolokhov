@@ -1,4 +1,8 @@
-package ru.job4j.crud;
+package ru.job4j.crud.controllers;
+
+import ru.job4j.crud.models.Role;
+import ru.job4j.crud.models.User;
+import ru.job4j.crud.models.ValidateService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -39,6 +43,9 @@ public class UserUpdateServlet extends HttpServlet {
         String id = req.getParameter("id");
         String name = req.getParameter("name");
         String email = req.getParameter("email");
-        return new User(id, name, "", email);
+        String password = req.getParameter("password");
+        Role role = Role.valueOf(req.getParameter("role"));
+        return new User.Builder().id(id).name(name).email(email).password(password).role(role)
+                .build();
     }
 }
