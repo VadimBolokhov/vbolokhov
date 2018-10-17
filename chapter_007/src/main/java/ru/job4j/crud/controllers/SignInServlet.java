@@ -36,10 +36,7 @@ public class SignInServlet extends HttpServlet {
         if (data.isPresent()) {
             User user = data.get();
             HttpSession session = req.getSession();
-            synchronized (session) {
-                session.setAttribute("login", user.getLogin());
-                session.setAttribute("role", user.getRole());
-            }
+            session.setAttribute("user", user);
             resp.sendRedirect(String.format("%s/list", req.getContextPath()));
         } else {
             req.setAttribute("error", "Login is incorrect");

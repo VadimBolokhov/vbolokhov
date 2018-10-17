@@ -5,6 +5,7 @@
     <title>Edit user info</title>
 </head>
 <body>
+<c:set var='currentUser' value='${sessionScope.user}'/>
 <c:set var='user' value='${requestScope.user}'/>
 <c:if test='${user.role == "ADMIN"}' var='isAdmin'/>
 <form action='${pageContext.servletContext.contextPath}/edit?id=${user.id}' method='post'>
@@ -28,7 +29,7 @@
                 <input type='text' name='email' size='20' value='${user.email}'/>
             </td>
         </tr>
-        <c:if test="${sessionScope.role == 'ADMIN'}">
+        <c:if test="${currentUser.role == 'ADMIN'}">
             <tr>
                 <td>Role:</td>
                 <td>
@@ -44,7 +45,7 @@
             </tr>
         </c:if>
     </table>
-    <c:if test="${sessionScope.role != 'ADMIN'}">
+    <c:if test="${currentUser.role != 'ADMIN'}">
         <input type="hidden" name="role" value="USER"/>
     </c:if>
     <input type='submit' value='Submit'/>

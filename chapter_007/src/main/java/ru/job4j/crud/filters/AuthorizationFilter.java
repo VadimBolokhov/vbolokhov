@@ -1,5 +1,7 @@
 package ru.job4j.crud.filters;
 
+import ru.job4j.crud.models.User;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +26,7 @@ public class AuthorizationFilter implements Filter {
             filterChain.doFilter(req, resp);
         } else {
             HttpSession session = request.getSession();
-            if (session.getAttribute("login") != null) {
+            if (session.getAttribute("user") != null) {
                 filterChain.doFilter(req, resp);
             }
             ((HttpServletResponse) resp).sendRedirect(String.format(

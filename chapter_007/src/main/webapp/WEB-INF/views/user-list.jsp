@@ -5,7 +5,8 @@
     <title>User list</title>
 </head>
 <body>
-<c:if test='${sessionScope.role != "ADMIN"}' var='notAdmin'/>
+<c:set var='currentUser' value='${sessionScope.user}'/>
+<c:if test='${currentUser.role != "ADMIN"}' var='notAdmin'/>
 <table>
     <tr><th>ID</th><th>Login</th><th>Name</th><th>E-mail</th><th>Creation date</th><th>Role</th></tr>
     <c:forEach var='user' items='${requestScope.users}'>
@@ -21,7 +22,7 @@
                 <form action='${pageContext.servletContext.contextPath}/edit' method='get'>
                     <input type='hidden' name='id' value='${id}'/>
                     <input type='submit' value='Edit'
-                        ${(notAdmin && user.login != sessionScope.login) ? 'disabled' : ''} />
+                        ${(notAdmin && user.login != currentUser.login) ? 'disabled' : ''} />
                 </form>
             </td><td>
             <form action='${pageContext.servletContext.contextPath}/list' method='post'>
