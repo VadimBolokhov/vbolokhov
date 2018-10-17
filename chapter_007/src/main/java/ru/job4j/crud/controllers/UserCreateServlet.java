@@ -2,6 +2,7 @@ package ru.job4j.crud.controllers;
 
 import ru.job4j.crud.models.Role;
 import ru.job4j.crud.models.User;
+import ru.job4j.crud.models.Validate;
 import ru.job4j.crud.models.ValidateService;
 
 import javax.servlet.RequestDispatcher;
@@ -19,7 +20,7 @@ import java.io.IOException;
  */
 public class UserCreateServlet extends HttpServlet {
     /** Input validation */
-    private final ValidateService validator = ValidateService.INSTANCE;
+    private final Validate validator = ValidateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

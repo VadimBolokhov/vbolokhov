@@ -9,7 +9,7 @@ import java.util.Optional;
  * @version $Id$
  * @since 0.1
  */
-public enum ValidateService {
+public enum ValidateService implements Validate {
     /** Singleton instance */
     INSTANCE;
     /** User store */
@@ -17,11 +17,11 @@ public enum ValidateService {
     /** "User does not exist" message */
     private static final String NOT_EXISTS = "User does not exist.";
 
-    /**
-     * Validate input and add new user to store
-     * @param user user to be added
-     * @return message
-     */
+    public static Validate getInstance() {
+        return INSTANCE;
+    }
+
+    @Override
     public synchronized String add(User user) {
         String message = "Login is not set.";
         if (this.isNotEmptyLogin(user)) {
@@ -58,11 +58,7 @@ public enum ValidateService {
         return this.store.findById(id).isPresent();
     }
 
-    /**
-     * Validate input and update user info
-     * @param user user to be updated
-     * @return message
-     */
+    @Override
     public synchronized String update(User user) {
         String message = NOT_EXISTS;
         String id = user.getId();
@@ -73,11 +69,7 @@ public enum ValidateService {
         return message;
     }
 
-    /**
-     * Validate input and delete user from the store
-     * @param id user to be deleted
-     * @return message
-     */
+    @Override
     public synchronized String delete(String id) {
         String message = NOT_EXISTS;
         if (id != null && this.userIdExists(id)) {
@@ -87,19 +79,12 @@ public enum ValidateService {
         return message;
     }
 
-    /**
-     * Return all users
-     * @return user list
-     */
+    @Override
     public synchronized List<User> findAll() {
         return this.store.findAll();
     }
 
-    /**
-     * Find user by id
-     * @param id user id
-     * @return user (if found)
-     */
+    @Override
     public synchronized Optional<User> findById(String id) {
         return this.store.findById(id);
     }

@@ -1,6 +1,7 @@
 package ru.job4j.crud.controllers;
 
 import ru.job4j.crud.models.User;
+import ru.job4j.crud.models.Validate;
 import ru.job4j.crud.models.ValidateService;
 
 import javax.servlet.ServletException;
@@ -23,7 +24,7 @@ import java.util.function.Function;
  */
 public class UserServlet extends HttpServlet {
     /** Input validation */
-    private final ValidateService validateService = ValidateService.INSTANCE;
+    private final Validate validateService = ValidateService.getInstance();
     /** Action dispatcher */
     private final Map<String, Function<User, String>> dispatch = new HashMap<>();
 

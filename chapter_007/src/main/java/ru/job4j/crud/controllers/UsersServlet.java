@@ -1,6 +1,7 @@
 package ru.job4j.crud.controllers;
 
 import ru.job4j.crud.models.User;
+import ru.job4j.crud.models.Validate;
 import ru.job4j.crud.models.ValidateService;
 
 import javax.servlet.RequestDispatcher;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class UsersServlet extends HttpServlet {
     /** Input validation */
-    private final ValidateService validator = ValidateService.INSTANCE;
+    private final Validate validator = ValidateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -39,6 +40,5 @@ public class UsersServlet extends HttpServlet {
             this.validator.delete(id);
         }
         doGet(req, resp);
-        //resp.sendRedirect(req.getContextPath() + "/list");
     }
 }
