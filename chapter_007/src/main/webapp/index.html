@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bootstrap Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <h1>My First Bootstrap Page</h1>
+    <p>This is some text.</p>
+    <form>
+        <div class="form-group">
+            <label for="firstname">First name:</label>
+            <input type="text" class="form-control" id="firstname">
+        </div>
+        <div class="form-group">
+            <label for="lastname">Last name:</label>
+            <input type="text" class="form-control" id="lastname">
+        </div>
+        <div class="form-group">
+            <label for="sex">Sex:</label>
+            <select name="sex" id="sex">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="desc">Description:</label>
+            <input type="text" class="form-control" id="desc">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+
+    <hr>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Sex</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>John</td>
+            <td>Doe</td>
+            <td>Male</td>
+            <td>No description</td>
+        </tr>
+        <tr>
+            <td>Mary</td>
+            <td>Moe</td>
+            <td>Female</td>
+            <td>Some description</td>
+        </tr>
+        <tr>
+            <td>July</td>
+            <td>Dooley</td>
+            <td>Female</td>
+            <td>Another description</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
