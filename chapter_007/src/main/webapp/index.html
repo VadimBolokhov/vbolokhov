@@ -9,16 +9,33 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         function validate() {
+            var valid = true;
             $("input").each(function() {
                 var value = $(this).val();
                 if (value == '') {
                     var id =$(this).attr("id");
                     var label = $("label[for='" + id + "']");
                     alert(label.text() + " required.");
+                    valid = false;
                     return false;
                 }
             });
+            if (valid) {
+                addRow();
+            }
             return false;
+        }
+
+        function addRow() {
+            var firstname = $('#firstname').val();
+            var lastname = $('#lastname').val();
+            var sex = $('#sex').val();
+            var desc = $('#desc').val();
+            $('#table tr:last').after('<tr><td>'
+                + firstname + '</td><td>'
+                + lastname + '</td><td>'
+                + sex + '</td><td>'
+                + desc + '</td></tr>');
         }
     </script>
 </head>
@@ -53,7 +70,7 @@
 
     <hr>
 
-    <table class="table table-striped">
+    <table class="table table-striped" id="table">
         <thead>
         <tr>
             <th>Firstname</th>
