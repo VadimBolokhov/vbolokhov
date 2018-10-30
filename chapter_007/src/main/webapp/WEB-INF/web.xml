@@ -84,4 +84,13 @@
         <servlet-name>UserSignoutServlet</servlet-name>
         <url-pattern>/signout</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JsonServlet</servlet-name>
+        <servlet-class>ru.job4j.servlets.JsonServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>JsonServlet</servlet-name>
+        <url-pattern>/json</url-pattern>
+    </servlet-mapping>
 </web-app>

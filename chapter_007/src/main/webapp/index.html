@@ -8,34 +8,73 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
+
+        getPersons();
+
+        function getPersons() {
+            $(function() {
+                $.ajax({
+                    url: "./json",
+                    method: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        fillTable(data);
+                    }
+                });
+            });
+        }
+
+        function fillTable(data) {
+            $.each(data, function(i, person) {
+                addRow(person);
+            })
+        }
+
+        function addRow(person) {
+            $('#table').find('tbody').append('<tr><td>'
+                + person.firstname + '</td><td>'
+                + person.lastname + '</td><td>'
+                + person.sex + '</td><td>'
+                + person.desc + '</td></tr>');
+        }
+
         function validate() {
-            var valid = true;
-            $("input").each(function() {
-                var value = $(this).val();
-                if (value == '') {
-                    var id =$(this).attr("id");
-                    var label = $("label[for='" + id + "']");
-                    alert(label.text() + " required.");
-                    valid = false;
-                    return false;
+            $(function() {
+                var valid = true;
+                $("input").each(function () {
+                    var value = $(this).val();
+                    if (value == '') {
+                        var id = $(this).attr("id");
+                        var label = $("label[for='" + id + "']");
+                        alert(label.text() + " required.");
+                        valid = false;
+                        return false;
+                    }
+                });
+                if (valid) {
+                    sendData();
                 }
             });
-            if (valid) {
-                addRow();
-            }
             return false;
         }
 
-        function addRow() {
-            var firstname = $('#firstname').val();
-            var lastname = $('#lastname').val();
-            var sex = $('#sex').val();
-            var desc = $('#desc').val();
-            $('#table tr:last').after('<tr><td>'
-                + firstname + '</td><td>'
-                + lastname + '</td><td>'
-                + sex + '</td><td>'
-                + desc + '</td></tr>');
+        function sendData() {
+            var person = {};
+            person.firstname = $('#firstname').val();
+            person.lastname = $('#lastname').val();
+            person.sex = $('#sex').val();
+            person.desc = $('#desc').val();
+
+            $.ajax({
+                url: "./json",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(person),
+                success: function() {
+                    addRow(person);
+                }
+            });
+            return false;
         }
     </script>
 </head>
@@ -80,24 +119,6 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>Male</td>
-            <td>No description</td>
-        </tr>
-        <tr>
-            <td>Mary</td>
-            <td>Moe</td>
-            <td>Female</td>
-            <td>Some description</td>
-        </tr>
-        <tr>
-            <td>July</td>
-            <td>Dooley</td>
-            <td>Female</td>
-            <td>Another description</td>
-        </tr>
         </tbody>
     </table>
 
