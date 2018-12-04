@@ -22,25 +22,16 @@ public enum ValidateService implements Validate {
     }
 
     @Override
-    public synchronized String add(User user) {
-        String message = "Login is not set.";
-        if (this.isNotEmptyLogin(user)) {
-            message = addUserIfNotExists(user);
-        }
-        return message;
+    public synchronized boolean add(User user) {
+        return this.addUserIfNotExists(user);
     }
 
-    private boolean isNotEmptyLogin(User user) {
-        return user.getLogin() != null && !user.getLogin().equals("");
-    }
-
-    private String addUserIfNotExists(User user) {
-        String result = "User already exists.";
-        boolean isNewUser = !userExists(user);
+    private boolean addUserIfNotExists(User user) {
+        boolean isNewUser = !this.userExists(user);
         if (isNewUser) {
-            result = addNewUser(user);
+            this.addNewUser(user);
         }
-        return result;
+        return isNewUser;
     }
 
     private boolean userExists(User user) {

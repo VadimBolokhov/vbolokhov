@@ -83,9 +83,14 @@ public class UserServlet extends HttpServlet {
     }
 
     @Override
-    public void init() throws ServletException {
-        this.dispatch.put("add", this.validateService::add);
+    public void init() {
+        this.dispatch.put("add", this::add);
         this.dispatch.put("update", this.validateService::update);
         this.dispatch.put("delete", user -> this.validateService.delete(user.getId()));
+    }
+
+    private String add(User user) {
+        return this.validateService.add(user)
+                ? "User has been added" : "User already exists";
     }
 }

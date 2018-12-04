@@ -16,12 +16,11 @@ public class ValidateStub implements Validate {
     private int ids = 0;
 
     @Override
-    public String add(User user) {
+    public boolean add(User user) {
         String id = String.valueOf(ids++);
         user = new User.Builder().id(id).login(user.getLogin()).password(user.getPassword())
                 .name(user.getName()).email(user.getEmail()).role(user.getRole()).build();
-        this.store.put(id, user);
-        return "add user";
+        return this.store.putIfAbsent(id, user) == null;
     }
 
     @Override

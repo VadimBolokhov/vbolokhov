@@ -19,6 +19,8 @@ public class DBStore implements Store {
     private static final BasicDataSource SOURCE = new BasicDataSource();
     /** Singleton instance */
     private static final DBStore INSTANCE = new DBStore();
+    /** Location class instance containing countries and city list */
+    private final Location location = Location.INSTANCE;
 
     public DBStore() {
         SOURCE.setDriverClassName("org.postgresql.Driver");
@@ -28,53 +30,73 @@ public class DBStore implements Store {
         SOURCE.setMinIdle(5);
         SOURCE.setMaxIdle(10);
         SOURCE.setMaxOpenPreparedStatements(100);
-        this.createTables();
+        this.createTablesWithRoot();
     }
 
     public static DBStore getInstance() {
         return INSTANCE;
     }
 
-    private void createTables() {
+    private void createTablesWithRoot() {
         try (Connection con = SOURCE.getConnection();
         Statement st = con.createStatement()) {
-            st.execute("CREATE TABLE IF NOT EXISTS roles("
-                    + "id serial PRIMARY KEY,"
-                    + " role VARCHAR(10) UNIQUE NOT NULL);");
-            st.execute("CREATE TABLE IF NOT EXISTS users("
-                    + "id serial PRIMARY KEY,"
-                    + " login VARCHAR(50) UNIQUE NOT NULL,"
-                    + " password VARCHAR(50) NOT NULL,"
-                    + " name VARCHAR(50) NOT NULL,"
-                    + " email VARCHAR(50),"
-                    + " create_date DATE NOT NULL,"
-                    + " role_id INTEGER REFERENCES roles(id));");
-            String insertRoles = String.format("INSERT INTO roles (role) VALUES ('%s'), ('%s')"
-                    + " ON CONFLICT (role) DO NOTHING;", Role.ADMIN, Role.USER);
-            st.execute(insertRoles);
-            st.execute("INSERT INTO users (login, password, name, create_date, role_id)"
-                    + " VALUES ('root', 'password', 'root', CURRENT_DATE, 1)"
-                    + " ON CONFLICT (login) DO NOTHING;");
+            this.createEmptyTables(st);
+            this.insertRoles(st);
+            this.insertRoot(st);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    private void createEmptyTables(Statement st) throws SQLException {
+        st.execute("CREATE TABLE IF NOT EXISTS roles("
+                + "id serial PRIMARY KEY,"
+                + " role VARCHAR(10) UNIQUE NOT NULL);");
+        st.execute("CREATE TABLE IF NOT EXISTS users("
+                + "id serial PRIMARY KEY,"
+                + " login VARCHAR(50) UNIQUE NOT NULL,"
+                + " password VARCHAR(50) NOT NULL,"
+                + " name VARCHAR(50) NOT NULL,"
+                + " email VARCHAR(50),"
+                + " create_date DATE NOT NULL,"
+                + " role_id INTEGER REFERENCES roles(id),"
+                + " country VARCHAR(50) NULL,"
+                + " city VARCHAR(50) NULL);"
+        );
+    }
+
+    private void insertRoles(Statement st) throws SQLException {
+        String insertRoles = String.format("INSERT INTO roles (role) VALUES ('%s'), ('%s')"
+                + " ON CONFLICT (role) DO NOTHING;", Role.ADMIN, Role.USER);
+        st.execute(insertRoles);
+    }
+
+    private void insertRoot(Statement st) throws SQLException {
+        String rootCountry = this.location.getCountries().get(0);
+        String insertRoot = new StringBuilder("INSERT INTO users")
+                .append(" (login, password, name, create_date, role_id, country)")
+                .append(String.format(" VALUES ('root', 'password', 'root', CURRENT_DATE, 1, '%s')", rootCountry))
+                .append(" ON CONFLICT (login) DO NOTHING;").toString();
+        st.execute(insertRoot);
+    }
+
     @Override
     public User add(User user) {
         String addUser =
-                "INSERT INTO users(login, password, name, email, create_date, role_id)"
-                        + "VALUES (?, ?, ?, ?, CURRENT_DATE, ?);";
+                "INSERT INTO users(login, password, name, email, create_date, role_id, country, city)"
+                        + "VALUES (?, ?, ?, ?, CURRENT_DATE, ?, ?, ?);";
         try (Connection con = SOURCE.getConnection();
-             PreparedStatement st = con.prepareStatement(addUser, Statement.RETURN_GENERATED_KEYS)) {
-            st.setString(1, user.getLogin());
-            st.setString(2, user.getPassword());
-            st.setString(3, user.getName());
-            st.setString(4, user.getEmail());
+             PreparedStatement ps = con.prepareStatement(addUser, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, user.getLogin());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getName());
+            ps.setString(4, user.getEmail());
             int roleId = user.getRole().ordinal() + 1;
-            st.setInt(5, roleId);
-            st.executeUpdate();
-            try (ResultSet rs = st.getGeneratedKeys()) {
+            ps.setInt(5, roleId);
+            ps.setString(6, user.getCountry());
+            ps.setString(7, user.getCity());
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
                 rs.next();
                 String id = String.valueOf(rs.getInt(1));
                 user = new User.Builder().id(id).login(user.getLogin()).password(user.getPassword())
@@ -88,18 +110,17 @@ public class DBStore implements Store {
 
     @Override
     public void update(String id, User newUser) {
-        String updateUser = "UPDATE users SET name=?, email=?, password=?, role_id=? WHERE id=?";
-        String name = newUser.getName();
-        String email = newUser.getEmail();
-        String password = newUser.getPassword();
+        String updateUser = "UPDATE users SET name=?, email=?, password=?, role_id=?, country=?, city=? WHERE id=?";
         try (Connection con = SOURCE.getConnection();
              PreparedStatement ps = con.prepareStatement(updateUser)) {
-            ps.setString(1, name);
-            ps.setString(2, email);
-            ps.setString(3, password);
+            ps.setString(1, newUser.getName());
+            ps.setString(2, newUser.getEmail());
+            ps.setString(3, newUser.getPassword());
             int roleId = newUser.getRole().ordinal() + 1;
             ps.setInt(4, roleId);
-            ps.setInt(5, Integer.parseInt(id));
+            ps.setString(5, newUser.getCountry());
+            ps.setString(6, newUser.getCity());
+            ps.setInt(7, Integer.parseInt(id));
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -146,10 +167,12 @@ public class DBStore implements Store {
         String password = entry.getString("password");
         String name = entry.getString("name");
         String email = entry.getString("email");
+        String country = entry.getString("country");
+        String city = entry.getString("city");
         Role role = Role.valueOf(entry.getString("role"));
         LocalDate createDate = entry.getObject("create_date", LocalDate.class);
         return new User.Builder().id(id).login(login).password(password).name(name)
-                .email(email).createDate(createDate).role(role)
+                .email(email).createDate(createDate).role(role).country(country).city(city)
                 .build();
     }
 

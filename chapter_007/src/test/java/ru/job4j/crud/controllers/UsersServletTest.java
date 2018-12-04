@@ -1,6 +1,7 @@
 package ru.job4j.crud.controllers;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.servlet.RequestDispatcher;
@@ -9,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,17 +46,28 @@ public class UsersServletTest {
     private HttpServletResponse resp;
 
     @Before
-    public void initMocks() {
+    public void initMocks() throws IOException {
         PowerMockito.mockStatic(ValidateService.class);
         when(ValidateService.getInstance()).thenReturn(this.validate);
         this.req = mock(HttpServletRequest.class);
         this.resp = mock(HttpServletResponse.class);
+        this.mockRequestDispatcher();
+        this.mockPrintWriter();
+    }
+
+    private void mockRequestDispatcher() {
         RequestDispatcher dispatcher = mock(RequestDispatcher.class);
         when(this.req.getRequestDispatcher(anyString())).thenReturn(dispatcher);
     }
 
+    private void mockPrintWriter() throws IOException {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        when(this.resp.getWriter()).thenReturn(printWriter);
+    }
+
     @Test
-    public void whenAddUserThenStoreIt() throws ServletException, IOException {
+    public void whenAddUserThenStoreIt() throws IOException {
         when(this.req.getParameter("login")).thenReturn("root");
         when(this.req.getParameter("name")).thenReturn("root");
         when(this.req.getParameter("role")).thenReturn("ADMIN");

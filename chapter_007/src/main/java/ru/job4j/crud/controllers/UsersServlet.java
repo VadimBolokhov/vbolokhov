@@ -1,5 +1,7 @@
 package ru.job4j.crud.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import ru.job4j.crud.models.Location;
 import ru.job4j.crud.models.User;
 import ru.job4j.crud.models.Validate;
 import ru.job4j.crud.models.ValidateService;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Users service servlet.
@@ -22,14 +25,23 @@ import java.util.List;
 public class UsersServlet extends HttpServlet {
     /** Input validation */
     private final Validate validator = ValidateService.getInstance();
+    /** Location class instance containing countries and city list */
+    private final Location location = Location.INSTANCE;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
-        List<User> users = this.validator.findAll();
-        req.setAttribute("users", users);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/user-list.jsp");
-        dispatcher.forward(req, resp);
+        String action = req.getParameter("action");
+        if (action != null && action.equals("getCities")) {
+            String country = req.getParameter("country");
+            List<String> cities = this.location.getCities(country);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(resp.getOutputStream(), cities);
+        } else {
+            List<User> users = this.validator.findAll();
+            req.setAttribute("users", users);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/user-list.jsp");
+            dispatcher.forward(req, resp);
+        }
     }
 
     @Override

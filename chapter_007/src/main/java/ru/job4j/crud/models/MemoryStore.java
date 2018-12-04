@@ -21,12 +21,19 @@ public enum MemoryStore implements Store {
     /** Next id to be generated */
     private int nextId = 1;
 
+    MemoryStore() {
+        String id = String.valueOf(nextId++);
+        User user = new User.Builder().id(id).login("root").name("root").password("password")
+                .role(Role.ADMIN).createDate(LocalDate.now()).country("Russia").build();
+        this.users.put(id, user);
+    }
+
     @Override
     public User add(User user) {
         String id = this.generateId();
         user = new User.Builder().id(id).login(user.getLogin()).password(user.getPassword())
                 .name(user.getName()).email(user.getEmail()).createDate(LocalDate.now())
-                .role(user.getRole()).build();
+                .role(user.getRole()).country(user.getCountry()).city(user.getCity()).build();
         this.users.put(id, user);
         return user;
     }
@@ -41,9 +48,13 @@ public enum MemoryStore implements Store {
         String email = newUser.getEmail();
         String password = newUser.getPassword();
         Role role = newUser.getRole();
+        String country = newUser.getCountry();
+        String city = newUser.getCity();
         User oldUser = this.users.get(id);
-        User userUpdate = new User.Builder().id(id).createDate(oldUser.getCreateDate())
+        User userUpdate = new User.Builder().login(oldUser.getLogin()).id(id)
+                .createDate(oldUser.getCreateDate())
                 .password(password).name(name).email(email).role(role)
+                .country(country).city(city)
                 .build();
         this.users.put(id, userUpdate);
     }

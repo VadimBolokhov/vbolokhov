@@ -34,14 +34,16 @@ public class SignInServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         Optional<User> data = this.findUser(login, password);
+        resp.setContentType("application/json");
         if (data.isPresent()) {
             User user = data.get();
             HttpSession session = req.getSession();
             session.setAttribute("user", user);
-            resp.sendRedirect(String.format("%s/list", req.getContextPath()));
+            String url = "{\"url\": \"./list\"}";
+            resp.getWriter().write(url);
         } else {
-            req.setAttribute("error", "Login is incorrect");
-            doGet(req, resp);
+            String error = "{\"error\": \"Login is incorrect\"}";
+            resp.getWriter().write(error);
         }
     }
 

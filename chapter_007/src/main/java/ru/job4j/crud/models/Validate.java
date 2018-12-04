@@ -13,9 +13,9 @@ public interface Validate {
     /**
      * Validate input and add new user to store
      * @param user user to be added
-     * @return message
+     * @return {@code true} - if user has been added, otherwise - {@code false}
      */
-    String add(User user);
+    boolean add(User user);
 
     /**
      * Validate input and update user info

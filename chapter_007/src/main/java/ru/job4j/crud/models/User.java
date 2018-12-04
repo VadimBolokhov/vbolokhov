@@ -22,6 +22,10 @@ public class User {
     private final String email;
     /** Creation date*/
     private final LocalDate createDate;
+    /** User's country */
+    private final String country;
+    /** User's city */
+    private final String city;
 
     private Role role;
 
@@ -33,6 +37,8 @@ public class User {
         this.email = builder.email;
         this.createDate = builder.createDate;
         this.role = builder.role;
+        this.country = builder.country;
+        this.city = builder.city;
     }
 
     public String getId() {
@@ -61,6 +67,14 @@ public class User {
 
     public Role getRole() {
         return role;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     @Override
@@ -99,6 +113,8 @@ public class User {
         private String email;
         private LocalDate createDate;
         private Role role;
+        private String country;
+        private String city;
 
         public Builder login(String login) {
             this.login = login;
@@ -132,6 +148,16 @@ public class User {
 
         public Builder role(Role role) {
             this.role = role;
+            return this;
+        }
+
+        public Builder country(String country) {
+            this.country = country;
+            return this;
+        }
+
+        public Builder city(String city) {
+            this.city = city;
             return this;
         }
 
