@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Seat reservation</title>
+</head>
+<body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+    setTimeout(function() {
+        location.reload();
+    }, 15000);
+
+    $(function() {
+        generateTableContent();
+    });
+
+    function generateTableContent() {
+        $.ajax({
+            url: "./hall",
+            type: "GET",
+            dataType: "json",
+            data: {"action" : "getSeatList"},
+            success: function(seatList) {
+                var seatMatrix = convertListToMatrix(seatList);
+                addTableHeader(seatMatrix[0].length);
+                addTableRows(seatMatrix);
+            }
+        });
+    }
+
+    function convertListToMatrix(seatList) {
+        var seatsArray = [];
+        for (var seat = 0, seatId, i, j; seat < seatList.length; seat++) {
+            seatId = seatList[seat].id;
+            i = Math.floor(seatId / 100) - 1;
+            if (seatsArray[i] === undefined) {
+                seatsArray[i] = [];
+            }
+            j = seatId % 100 - 1;
+            seatsArray[i][j] = seatList[seat];
+        }
+        return seatsArray;
+    }
+
+    function addTableHeader(maxSeats) {
+        var header = $("thead:first");
+        header.append("<tr>");
+        header.append("<th style='width: 120px;'>Ряд / Место</th>");
+        for (var seat = 1; seat <= maxSeats; seat++) {
+            header.append("<th>" + seat + "</th>");
+        }
+        header.append("</tr>");
+    }
+
+    function addTableRows(hall) {
+        var tableBody = $("tbody:first");
+        for (var raw = 0; raw < hall.length; raw++) {
+            tableBody.append("<tr>");
+            tableBody.append("<th>" + (raw + 1) + "</th>");
+            for (var seat = 0; seat < hall[raw].length; seat++) {
+                var cell = "<td><input type='radio' name='place' value='" + hall[raw][seat].id + "'";
+                if (hall[raw][seat].reserved) {
+                    cell += " disabled";
+                }
+                cell += "> Ряд " + (raw + 1) + ", Место " + (seat + 1) + "</input></td>";
+                tableBody.append(cell);
+            }
+            tableBody.append("</tr>");
+        }
+    }
+
+    $(function() {
+            $("#pay").click(
+                function () {
+                    var selectedSeat = $("input:checked");
+                    if (selectedSeat.val() === undefined) {
+                        alert("Select seat");
+                    } else {
+                        window.location.href = "payment.html?seat=" + selectedSeat.val();
+                    }
+                }
+            )
+        }
+    );
+</script>
+
+<div class="container">
+    <div class="row pt-3">
+        <h4>
+            Бронирование мест на сеанс
+        </h4>
+        <table class="table table-bordered">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="row float-right">
+        <button type="button" id="pay" class="btn btn-success">Оплатить</button>
+    </div>
+</div>
+</body>
+</html>

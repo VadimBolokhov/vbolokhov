@@ -93,4 +93,13 @@
         <servlet-name>JsonServlet</servlet-name>
         <url-pattern>/json</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CinemaHallServlet</servlet-name>
+        <servlet-class>ru.job4j.cinema.controllers.HallServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CinemaHallServlet</servlet-name>
+        <url-pattern>/cinema/hall</url-pattern>
+    </servlet-mapping>
 </web-app>
