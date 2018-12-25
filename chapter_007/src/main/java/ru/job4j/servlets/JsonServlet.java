@@ -1,12 +1,12 @@
 package ru.job4j.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ru.job4j.cinema.service.JsonRequestConverter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,16 +32,9 @@ public class JsonServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        StringBuilder data = new StringBuilder();
-        try (BufferedReader reader = req.getReader()) {
-            String line = reader.readLine();
-            while (line != null) {
-                data.append(line);
-                line = reader.readLine();
-            }
-        }
+        String data = new JsonRequestConverter().convertRequestToString(req);
         ObjectMapper mapper = new ObjectMapper();
-        Person person = mapper.readValue(data.toString(), Person.class);
+        Person person = mapper.readValue(data, Person.class);
         this.persons.put(this.key++, person);
     }
 }
