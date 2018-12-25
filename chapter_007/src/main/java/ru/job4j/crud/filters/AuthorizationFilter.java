@@ -16,6 +16,12 @@ import java.io.IOException;
  */
 public class AuthorizationFilter implements Filter {
 
+    private ServletContext context;
+
+    public void init(FilterConfig fConfig) {
+        this.context = fConfig.getServletContext();
+    }
+
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain)
             throws IOException, ServletException {
