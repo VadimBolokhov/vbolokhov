@@ -30,14 +30,13 @@ public class DBStore implements Store {
         SOURCE.setMinIdle(5);
         SOURCE.setMaxIdle(10);
         SOURCE.setMaxOpenPreparedStatements(100);
-        this.createTablesWithRoot();
     }
 
     public static DBStore getInstance() {
         return INSTANCE;
     }
 
-    private void createTablesWithRoot() {
+    public void initStore() {
         try (Connection con = SOURCE.getConnection();
         Statement st = con.createStatement()) {
             this.createEmptyTables(st);

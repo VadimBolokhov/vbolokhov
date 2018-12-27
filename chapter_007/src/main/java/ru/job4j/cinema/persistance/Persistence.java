@@ -37,4 +37,9 @@ public interface Persistence {
      * @return ticket
      */
     Optional<Ticket> getSeatInfo(int seat);
+
+    /**
+     * Create empty tables in the DB
+     */
+    void initDB();
 }

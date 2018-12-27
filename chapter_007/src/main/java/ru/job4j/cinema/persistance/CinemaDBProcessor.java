@@ -25,7 +25,6 @@ public enum CinemaDBProcessor implements Persistence {
 
     CinemaDBProcessor() {
         this.setDBProperties();
-        this.initDB();
     }
 
     private void setDBProperties() {
@@ -38,7 +37,7 @@ public enum CinemaDBProcessor implements Persistence {
         source.setMaxOpenPreparedStatements(100);
     }
 
-    private void initDB() {
+    public void initDB() {
         String createTables = "CREATE TABLE IF NOT EXISTS accounts ("
                 + "id SERIAL PRIMARY KEY,"
                 + " username VARCHAR(50) NOT NULL,"

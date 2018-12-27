@@ -22,6 +22,11 @@ public enum ValidateService implements Validate {
     }
 
     @Override
+    public void initStore() {
+        this.store.initStore();
+    }
+
+    @Override
     public synchronized boolean add(User user) {
         return this.addUserIfNotExists(user);
     }

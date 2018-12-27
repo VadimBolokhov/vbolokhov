@@ -31,7 +31,7 @@ public interface Service {
     boolean reserve(Ticket ticket);
 
     /**
-     * Add seats to empty hall
+     * Create cinema hall
      * @param rows number of rows
      * @param seats number of seats in a row
      */

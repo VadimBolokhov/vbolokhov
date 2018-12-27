@@ -16,6 +16,9 @@ public class ValidateStub implements Validate {
     private int ids = 0;
 
     @Override
+    public void initStore() { }
+
+    @Override
     public boolean add(User user) {
         String id = String.valueOf(ids++);
         user = new User.Builder().id(id).login(user.getLogin()).password(user.getPassword())

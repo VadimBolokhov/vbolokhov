@@ -21,7 +21,8 @@ public enum MemoryStore implements Store {
     /** Next id to be generated */
     private int nextId = 1;
 
-    MemoryStore() {
+    @Override
+    public void initStore() {
         String id = String.valueOf(nextId++);
         User user = new User.Builder().id(id).login("root").name("root").password("password")
                 .role(Role.ADMIN).createDate(LocalDate.now()).country("Russia").build();

@@ -43,12 +43,9 @@ public enum CinemaService implements Service {
         return success;
     }
 
-    /**
-     * Add seats to empty hall
-     * @param rows number of rows
-     * @param seats number of seats in a row
-     */
+    @Override
     public void initHall(int rows, int seats) {
+        this.store.initDB();
         this.store.addSeats(rows, seats);
     }
 }

@@ -43,4 +43,9 @@ public interface Validate {
      * @return user (if found)
      */
     Optional<User> findById(String id);
+
+    /**
+     * Create user storage with root
+     */
+    void initStore();
 }

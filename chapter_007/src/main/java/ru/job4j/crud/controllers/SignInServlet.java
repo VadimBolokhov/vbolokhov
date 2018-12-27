@@ -24,6 +24,11 @@ public class SignInServlet extends HttpServlet {
     private final Validate validateService = ValidateService.getInstance();
 
     @Override
+    public void init() throws ServletException {
+        this.validateService.initStore();
+    }
+
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/login.jsp");
         dispatcher.forward(req, resp);
