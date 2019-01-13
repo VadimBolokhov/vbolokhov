@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringJoiner;
 
 /**
@@ -46,11 +47,15 @@ public class HallServlet extends HttpServlet {
 
     private void generatePriceResponse(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         int seat = Integer.parseInt(req.getParameter("seat"));
-        double price = this.service.findSeatById(seat).get().getPrice();
-        String response = String.format("{\"price\" : \"%.2f\"}", price);
-        PrintWriter out = resp.getWriter();
-        out.write(response);
-        out.flush();
+        Optional<Ticket> data = this.service.findSeatById(seat);
+        if (data.isPresent()) {
+            Ticket priceResponse = data.get();
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(resp.getOutputStream(), priceResponse);
+        } else {
+            this.generateSuccessResponse(false, resp);
+        }
+
     }
 
     private void generateSeatListResponse(HttpServletResponse resp) throws IOException {
@@ -77,7 +82,7 @@ public class HallServlet extends HttpServlet {
         StringJoiner jsonString = new StringJoiner(", ", "{", "}");
         jsonString.add("\"url\" : \"index.html\"");
         if (!success) {
-            jsonString.add("\"error\" : \"Sorry, the seat is reserved, please select another one\"");
+            jsonString.add("\"error\" : \"Sorry, the seat is unavailable, please select another one\"");
         }
         PrintWriter out = resp.getWriter();
         out.write(jsonString.toString());

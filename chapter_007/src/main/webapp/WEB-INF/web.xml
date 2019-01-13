@@ -22,6 +22,15 @@
         <url-pattern>/update</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>CinemaFilter</filter-name>
+        <filter-class>ru.job4j.cinema.filters.BookingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CinemaFilter</filter-name>
+        <url-pattern>/cinema/payment.html</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>EchoServlet</servlet-name>
         <servlet-class>ru.job4j.servlets.EchoServlet</servlet-class>

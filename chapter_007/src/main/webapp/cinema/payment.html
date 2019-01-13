@@ -27,16 +27,21 @@
         $.ajax({
             url: "./hall",
             type: "GET",
+            contentType: "json",
             dataType: "json",
             data: {"action" : "getPrice",
                 "seat" : SEAT_ID},
             success: function(response) {
-                price = response.price;
-                $("#info").text("Вы выбрали ряд " + raw + " место " + seat
-                    + ", Сумма : " + price + " рублей.");
+                if (response.error !== undefined) {
+                    alert(response.error);
+                    window.location.href = response.url;
+                } else {
+                    price = response.price;
+                    $("#info").text("Вы выбрали ряд " + raw + " место " + seat
+                        + ", Сумма : " + price + " рублей.");
+                }
             }
         });
-
     });
 
     $(function() {
@@ -59,7 +64,7 @@
                     data: JSON.stringify(ticket),
                     success: function(response) {
                         if (response.error !== undefined) {
-                            alert(response.error)
+                            alert(response.error);
                         }
                         window.location.href = response.url;
                     }

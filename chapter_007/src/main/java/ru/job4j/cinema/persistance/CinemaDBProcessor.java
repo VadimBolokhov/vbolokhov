@@ -132,7 +132,7 @@ public enum CinemaDBProcessor implements Persistence {
 
     @Override
     public Optional<Ticket> getSeatInfo(int seat) {
-        Ticket ticket = new Ticket(seat);
+        Optional<Ticket> result = Optional.empty();
         String getInfo = "SELECT h.seat, h.reserved, h.price, a.username, a.phone"
                 + " FROM halls AS h LEFT OUTER JOIN accounts AS a ON h.account_id = a.id"
                 + " WHERE h.seat = ?;";
@@ -141,15 +141,17 @@ public enum CinemaDBProcessor implements Persistence {
             ps.setInt(1, seat);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
+                    Ticket ticket = new Ticket(seat);
                     ticket.setReserved(rs.getBoolean("reserved"));
                     ticket.setPrice(rs.getDouble("price"));
                     ticket.setUsername(rs.getString("username"));
                     ticket.setPhone(rs.getString("phone"));
+                    result = Optional.of(ticket);
                 }
             }
         } catch (SQLException e) {
             LOG.info(e.getMessage());
         }
-        return Optional.of(ticket);
+        return result;
     }
 }
