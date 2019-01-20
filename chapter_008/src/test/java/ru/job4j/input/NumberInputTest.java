@@ -42,7 +42,7 @@ public class NumberInputTest {
     }
 
     @Test
-    public void shouldThrowException() throws IOException {
+    public void whenLessThenFourBytesThenShouldReturnFalse() throws IOException {
         try (ByteArrayInputStream input = new ByteArrayInputStream("0".getBytes())) {
             NumberInput ni = new NumberInput();
 
