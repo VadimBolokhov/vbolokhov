@@ -29,21 +29,29 @@ public class TestFileSystem {
      * @throws IOException if an I/O error occurs or the parent directory does not exist
      */
     public void createFileSystem() throws IOException {
-        Files.createDirectories(this.root);
         this.createDirectories();
         this.createFiles();
     }
 
     private void createDirectories() throws IOException {
-        this.dirs.add(Files.createDirectory(this.root.resolve("1")));
-        this.dirs.add(Files.createDirectory(this.root.resolve("1/1")));
-        this.dirs.add(Files.createDirectory(this.root.resolve("1/2")));
-        this.dirs.add(Files.createDirectory(this.root.resolve("2")));
-        this.dirs.add(Files.createDirectory(this.root.resolve("2/1")));
-        this.dirs.add(Files.createDirectory(this.root.resolve("2/1/1")));
-        this.dirs.add(Files.createDirectory(this.root.resolve("2/1/2")));
-        this.dirs.add(Files.createDirectory(this.root.resolve("2/1/3")));
-        this.dirs.add(Files.createDirectory(this.root.resolve("2/2")));
+        this.dirs.add(Files.createDirectories(this.root));
+        this.createSubdirectory("1");
+        this.createSubdirectory("1/1");
+        this.createSubdirectory("1/2");
+        this.createSubdirectory("2");
+        this.createSubdirectory("2/1");
+        this.createSubdirectory("2/1/1");
+        this.createSubdirectory("2/1/2");
+        this.createSubdirectory("2/1/3");
+        this.createSubdirectory("2/2");
+    }
+
+    private void createSubdirectory(String name) {
+        try {
+            this.dirs.add(Files.createDirectory(this.root.resolve(name)));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void createFiles() throws IOException {
@@ -79,7 +87,9 @@ public class TestFileSystem {
                 deleteDirectory(file);
             }
         }
-        directoryToBeDeleted.delete();
+        if (!directoryToBeDeleted.delete()) {
+            System.out.println(directoryToBeDeleted);
+        }
     }
 
     /**
