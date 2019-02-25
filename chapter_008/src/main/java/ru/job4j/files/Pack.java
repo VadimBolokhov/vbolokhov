@@ -2,6 +2,7 @@ package ru.job4j.files;
 
 import java.io.*;
 import java.nio.file.FileSystemException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -10,12 +11,6 @@ import java.util.StringJoiner;
  * @author Vadim Bolokhov
  */
 public class Pack {
-    /** Archiver */
-    private Archiver archiver;
-
-    public Pack(Archiver archiver) {
-        this.archiver = archiver;
-    }
 
     public static void main(String[] args) throws IOException {
         Args arguments = new Args(args);
@@ -23,8 +18,11 @@ public class Pack {
             String sourceArg = arguments.directory();
             String destArg = arguments.output();
             List<String> extensions = arguments.exclude();
-            Pack pack = new Pack(new ZipArchiver());
-            pack.pack(sourceArg, destArg, extensions);
+            ZipArchiver archiver = new ZipArchiver();
+            PathEntryList list = archiver.getPathEntryList(sourceArg, extensions);
+            archiver.pack(list, Paths.get(destArg));
+        } catch (FileNotFoundException e) {
+            System.out.println("Source directory does not exist.");
         } catch (IllegalArgumentException e) {
             String usage = new StringJoiner(System.lineSeparator())
                     .add("Usage: pack -d <source directory> -o <output> [-options]")
@@ -35,9 +33,5 @@ public class Pack {
         } catch (FileSystemException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    private void pack(String source, String dest, List<String> extensions) throws IOException {
-        this.archiver.pack(source, dest, extensions);
     }
 }

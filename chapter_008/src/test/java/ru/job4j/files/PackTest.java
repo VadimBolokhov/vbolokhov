@@ -37,7 +37,7 @@ public class PackTest {
     }
 
     @Test
-    public void whenPackTxtFilesThenResultFileShouldNotContainTxt() throws IOException {
+    public void whenSpecifyTxtFilesThenResultFileShouldNotContainTxt() throws IOException {
         Path zipFile = ROOT.resolve("out/project.zip");
         String[] args = {"-d", ROOT.toString(), "-e", "txt", "-o", zipFile.toString()};
         long expectedSize = this.fs.getAllFilesAndDirs().stream()

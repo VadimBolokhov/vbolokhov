@@ -1,13 +1,13 @@
 package ru.job4j.files;
 
 import java.io.*;
-import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Queue;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -15,72 +15,74 @@ import java.util.zip.ZipOutputStream;
  * Zip archiver.
  * @author Vadim Bolokhov
  */
-public class ZipArchiver implements Archiver {
-    /** File search */
-    private Search fileSearch = new Search();
+public class ZipArchiver {
 
-    @Override
-    public void pack(String source, String dest, List<String> exclude) throws IOException {
-        Path input = this.getAbsolutePath(source);
-        List<File> searchResult = this.fileSearch.files(input.toString(), new LinkedList<>());
-        if (!searchResult.isEmpty()) {
-            List<File> filesToZip = this.excludeExtensions(searchResult, exclude);
-            File zipFile = this.createTargetDirectory(dest);
-            try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile))) {
-                Path root = getZipRoot(input);
-                for (File fileToZip : filesToZip) {
-                    String entryName = this.getEntryName(root, fileToZip);
-                    if (fileToZip.isDirectory()) {
-                        zipOut.putNextEntry(new ZipEntry(entryName + "/"));
-                        zipOut.closeEntry();
-                    } else {
-                        try (FileInputStream fis = new FileInputStream(fileToZip)) {
-                            zipOut.putNextEntry(new ZipEntry(entryName));
-                            this.writeBytes(fis, zipOut);
-                            zipOut.closeEntry();
-                        }
+    /**
+     * Returns an iterable set of files and directories.
+     * @param source source directory
+     * @param exts list of extensions to be excluded
+     * @return {@code PathEntryList} object containing files and directories
+     * @throws IOException if an I/O error occurs
+     */
+    public PathEntryList getPathEntryList(String source, List<String> exts) throws IOException {
+        Path input = Paths.get(source);
+        PathEntryList list = new PathEntryList(input);
+        if (Files.exists(input)) {
+            String regex = String.format(".+\\.(%s)\\b", String.join("|", exts));
+            Queue<Path> pathQueue = new LinkedList<>();
+            pathQueue.offer(input);
+            while (!pathQueue.isEmpty()) {
+                Path file = pathQueue.poll();
+                if (Files.isDirectory(file)) {
+                    try (Stream<Path> pathStream = Files.list(file)) {
+                        pathStream.forEach(pathQueue::offer);
                     }
+                    list.addPath(file);
+                } else if (!file.toString().matches(regex)) {
+                    list.addPath(file);
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Compresses files and directories into destination zip file
+     * @param filesToZip files and directories to be compressed
+     * @param dest destination file
+     * @throws IOException if an I/O error occurs
+     */
+    public void pack(PathEntryList filesToZip, Path dest) throws IOException {
+        if (filesToZip.containsFiles()) {
+            this.createTargetDirectory(dest);
+            try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(dest.toFile()))) {
+                for (PathEntryList.PathEntry entry : filesToZip) {
+                    this.putEntry(entry, zipOut);
                 }
             }
         }
     }
 
-    private Path getZipRoot(Path source) {
-        return Files.isDirectory(source) ? source : source.getParent();
-    }
-
-    private Path getAbsolutePath(String source) {
-        Path result = Paths.get(source);
-        if (!result.isAbsolute()) {
-            Path current = Paths.get(System.getProperty("user.dir"));
-            result = current.resolve(result);
+    private void createTargetDirectory(Path dest) throws IOException {
+        Path zipFileParent = dest.getParent();
+        if (zipFileParent != null) {
+            Files.createDirectories(zipFileParent);
         }
-        return result;
     }
 
-    private File createTargetDirectory(String dest) throws FileSystemException {
-        File zipFile = this.getAbsolutePath(dest).toFile();
-        File parent = zipFile.getParentFile();
-        if (!parent.exists() && !parent.mkdirs()) {
-            throw new FileSystemException("Unable to create directory: " + parent.toString());
+    private void putEntry(PathEntryList.PathEntry entry, ZipOutputStream zipOut) throws IOException {
+        String entryName = entry.getEntryName();
+        Path fileToZip = entry.getPath();
+        if (Files.isDirectory(fileToZip)) {
+            zipOut.putNextEntry(new ZipEntry(entryName + "/"));
+            zipOut.closeEntry();
+        } else {
+            try (FileInputStream fis = new FileInputStream(fileToZip.toFile())) {
+                zipOut.putNextEntry(new ZipEntry(entryName));
+                this.writeBytes(fis, zipOut);
+                zipOut.closeEntry();
+            }
         }
-        return zipFile;
-    }
-
-    private List<File> excludeExtensions(List<File> fileList, List<String> extensions) {
-        List<File> result = fileList;
-        if (!extensions.isEmpty()) {
-            String regex = String.format(".+\\.(%s)\\b", String.join("|", extensions));
-            result = result.stream()
-                    .filter(file -> !file.getName().matches(regex))
-                    .collect(Collectors.toList());
-        }
-        return result;
-    }
-
-    private String getEntryName(Path source, File fileToZip) {
-        Path relativePath = source.relativize(fileToZip.toPath());
-        return relativePath.toString();
     }
 
     private void writeBytes(FileInputStream fis, ZipOutputStream zipOut) throws IOException {
