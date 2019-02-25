@@ -79,9 +79,10 @@ public class SearchTest {
     }
 
     @Test
-    public void whenExtensionsIsNotSpecifiedThenReturnAllDirsAndFiles() {
+    public void whenExtensionsAreNotSpecifiedThenReturnAllDirsAndFiles() {
         Search fileSearch = new Search();
         List<File> expected = this.fileSystem.getAllFilesAndDirs();
+        expected.remove(0);
 
         List<File> result = fileSearch.files(ROOT.toString(), new LinkedList<>());
 
