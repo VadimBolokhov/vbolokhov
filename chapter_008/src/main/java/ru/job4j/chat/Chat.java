@@ -23,12 +23,10 @@ public class Chat {
     private ChatOut out;
     /** Chat bot */
     private ChatAI bot;
-    /** When true the bot doesn't answer */
-    private boolean isSilentMode = false;
-    /** Leave chat */
-    private boolean exit = false;
     /** Chat reserved words */
-    private Map<String, Runnable> keywords = new HashMap<>();
+    private Map<String, ChatMode> keywords = new HashMap<>();
+    /** Chat mode */
+    private ChatMode chatMode;
 
     public Chat(ChatOut out, ChatAI bot) {
         this.out = out;
@@ -37,9 +35,9 @@ public class Chat {
     }
 
     private void addKeywords() {
-        this.keywords.put(EXIT_WORD, () -> this.exit = true);
-        this.keywords.put(SUSPEND_WORD, () -> this.isSilentMode = true);
-        this.keywords.put(RESUME_WORD, () -> this.isSilentMode = false);
+        this.keywords.put(EXIT_WORD, ChatMode.EXIT);
+        this.keywords.put(SUSPEND_WORD, ChatMode.SILENT);
+        this.keywords.put(RESUME_WORD, ChatMode.SPEAKER);
     }
 
     /**
@@ -49,13 +47,13 @@ public class Chat {
     public void start() throws IOException {
         try (Scanner scanner = new Scanner(System.in)) {
             this.out.display(CHAT_GREETING);
-            while (!this.exit && scanner.hasNextLine()) {
+            while (this.chatMode != ChatMode.EXIT && scanner.hasNextLine()) {
                 String message = scanner.nextLine();
                 this.out.display(message);
                 String key = this.toLowerCase(message);
                 if (this.keywords.containsKey(key)) {
-                    this.keywords.get(key).run();
-                } else if (!this.isSilentMode) {
+                    this.chatMode = this.keywords.get(key);
+                } else if (this.chatMode != ChatMode.SILENT) {
                     String answer = this.bot.discuss(message);
                     this.out.display(answer);
                 }
@@ -65,5 +63,12 @@ public class Chat {
 
     private String toLowerCase(String message) {
         return message.trim().toLowerCase();
+    }
+
+    /**
+     * Chat modes enumeration
+     */
+    private enum ChatMode {
+        EXIT, SILENT, SPEAKER
     }
 }
