@@ -1,6 +1,5 @@
 package ru.job4j.switcher;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static java.lang.Thread.sleep;
@@ -13,7 +12,6 @@ import static org.junit.Assert.*;
  * @version $Id$
  * @since 0.1
  */
-@Ignore
 public class SwitcherTest {
     @Test
     public void whenStartThreadsThenReturnStringWithOnesAndTwos() throws InterruptedException {

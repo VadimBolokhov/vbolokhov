@@ -37,7 +37,6 @@ import ru.job4j.crud.models.ValidateService;
  * @version $Id$
  * @since 0.1
  */
-@Ignore
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ValidateService.class)
 public class UsersServletTest {
