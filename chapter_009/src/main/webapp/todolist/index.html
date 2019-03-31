@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>TODO list</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+    var tableBody;
+    var showAll;
+
+    $(function() {
+        init();
+    });
+
+    function init() {
+        tableBody  = $("tbody:first");
+        showAll = $(".show-all");
+        showAll.prop('checked', false);
+        addTableHeader();
+        generateTableContent();
+    }
+
+    function generateTableContent() {
+        var query = showAll.prop('checked') ? "getAllItems" : "getUndone";
+        $.ajax({
+            url: "./items",
+            type: "GET",
+            dataType: "json",
+            data: {"action" : query},
+            success: function(itemList) {
+                addTableRows(itemList);
+            }
+        });
+    }
+
+    function addTableHeader() {
+        var header = $("thead:first");
+        header.append("<tr><th style='width: 120px;'>Description</th>"
+            + "<th style='width: 120px;'>Creation date</th>"
+            + "<th style='width: 120px;'>Done</th></tr>"
+        );
+    }
+
+    function addTableRows(itemList) {
+        for (var i = 0; i < itemList.length; i++) {
+            addRow(itemList[i]);
+        }
+    }
+
+    function addRow(item) {
+        tableBody.append("<tr><td>" + item.desc + "</td><td>"
+            + new Date(item.created).toLocaleString()
+            + "</td><td><input class='check' type='checkbox' value=" + item.id + checked(item)
+            + "></td></tr>"
+        );
+    }
+
+    function checked(item) {
+        return item.done ? " checked" : "";
+    }
+
+    $(function() {
+            $("#submit").click(
+                function() {
+                    var input = $("#desc");
+                    var desc = input.val().trim();
+                    if (desc === "") {
+                        alert("Введите описание задания");
+                    } else {
+                        input.val("");
+
+                        var request = {action: "add",
+                            item: {
+                                desc: desc,
+                                created: Date.now(),
+                                done: false
+                            }};
+
+                        $.ajax({
+                            url : "./items",
+                            type : "POST",
+                            contentType : "json",
+                            dataType : "json",
+                            data : JSON.stringify(request),
+                            success : function(response) {
+                                if (response.error !== undefined) {
+                                    alert(response.error);
+                                } else {
+                                    addRow(response);
+                                }
+                            }
+                        });
+                    }
+                }
+            )
+        }
+    );
+
+    $(document).on("change", ".check", function () {
+        var checkbox = $(this);
+        checkbox.prop('disabled', true);
+        var done = checkbox.prop('checked');
+
+        var request = {action: "update",
+            item: {
+                id: checkbox.val(),
+                done: done
+            }};
+
+        $.ajax({
+            url: "./items",
+            type: "POST",
+            contentType: "json",
+            dataType: "json",
+            data: JSON.stringify(request),
+            success: function(response) {
+                if (response.error !== undefined) {
+                    alert(response.error);
+                    checkbox.prop('checked', !done);
+                }
+            },
+            complete: function () {
+                checkbox.prop('disabled', false);
+            }
+        });
+    });
+
+    $(document).on("change", ".show-all", function () {
+        tableBody.empty();
+        generateTableContent();
+    });
+
+</script>
+<div class="container">
+
+    <div>
+        <h3 id="info" >
+            Добавить задание:
+        </h3>
+    </div>
+    <div>
+        <form>
+            <div class="form-group">
+                <label for="desc">Описание</label>
+                <input type="text" class="form-control" id="desc" placeholder="Описание">
+            </div>
+            <button type="button" id="submit" class="btn btn-success">Добавить</button>
+        </form>
+    </div>
+
+    <div>
+        <h4>Список заданий</h4>
+        <input id='show-all' class='show-all' type='checkbox'>
+        <label for="show-all">Показать все</label>
+        <table class="table table-bordered">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
