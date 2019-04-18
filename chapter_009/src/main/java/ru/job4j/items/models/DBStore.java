@@ -11,6 +11,7 @@ import org.hibernate.query.Query;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Hibernate processor for persistence layer.
@@ -53,38 +54,39 @@ public enum DBStore implements Persistence {
 
     @Override
     public Item addItem(Item item) {
-        Item newItem = new Item(item.getDesc(), item.getCreated(), item.isDone());
+        return this.execute(
+                session -> {
+                    Item newItem = new Item(item.getDesc(), item.getCreated(), item.isDone());
+                    int key = (int) session.save(newItem);
+                    newItem.setId(key);
+                    return newItem;
+                }
+        );
+    }
+
+    private <T> T execute(final Function<Session, T> command) {
         try (Session session = this.factory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-            int key = (int) session.save(newItem);
-            newItem.setId(key);
-            session.getTransaction().commit();
+                T result = command.apply(session);
+                transaction.commit();
+                return result;
             } catch (HibernateException e) {
                 LOG.error(e.getMessage());
                 transaction.rollback();
+                throw e;
             }
         }
-        return newItem;
     }
 
     @Override
     public boolean update(Item item) {
-        boolean result = false;
-        try (Session session = this.factory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            try {
-                Query query = session.createQuery("UPDATE Item I SET I.done=:done WHERE I.id=:id");
-                query.setParameter("done", item.isDone());
-                query.setParameter("id", item.getId());
-                query.executeUpdate();
-                transaction.commit();
-                result = true;
-            } catch (HibernateException e) {
-                LOG.error(e.getMessage());
-                transaction.rollback();
-            }
-        }
-        return result;
+        return this.execute(session -> {
+            Query query = session.createQuery("UPDATE Item I SET I.done=:done WHERE I.id=:id");
+            query.setParameter("done", item.isDone());
+            query.setParameter("id", item.getId());
+            query.executeUpdate();
+            return true;
+        });
     }
 }
