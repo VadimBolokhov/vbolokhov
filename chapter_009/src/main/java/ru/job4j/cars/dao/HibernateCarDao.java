@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import ru.job4j.cars.models.Car;
 
 import java.util.LinkedList;
@@ -24,74 +25,47 @@ public enum HibernateCarDao implements CarDao {
     /** Logger */
     private static final Logger LOG = LogManager.getLogger(HibernateCarDao.class.getName());
     /** Session factory */
-    private final SessionFactory factory =  new Configuration()
-            .configure("cars-hibernate.cfg.xml")
-            .buildSessionFactory();
+    private final SessionFactory factory = HibernateFactory.getFactory();
+
+    private final HibernateGenericDao<Car> dao = new HibernateGenericDao<>(Car.class);
+
+    HibernateCarDao() {
+        this.dao.setFactory(this.factory);
+    }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<Car> getAllCars() {
-        List<Car> result = new LinkedList<>();
+        return this.dao.getAll();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Car> getUnsoldCars() {
+        List<Car> result;
         try (Session session = this.factory.openSession()) {
-            result = session.createQuery("FROM Car").list();
+            result = session.createQuery("From Car where sold = false").list();
         }
         return result;
     }
 
     @Override
     public Optional<Car> getCarById(int id) {
-        Optional<Car> result = Optional.empty();
-        try (Session session = this.factory.openSession()) {
-            Car car = (Car) session.get(Car.class, id);
-            result = Optional.ofNullable(car);
-        }
-        return result;
+        return this.dao.getById(id);
     }
 
     @Override
     public int addCar(Car car) {
-        return this.execute(
-                session -> (int) session.save(car)
-        );
-    }
-
-    private <T> T execute(final Function<Session, T> command) {
-        try (Session session = this.factory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            try {
-                T result = command.apply(session);
-                transaction.commit();
-                return result;
-            } catch (HibernateException e) {
-                transaction.rollback();
-                LOG.error(e.getMessage());
-                throw e;
-            }
-        }
+        return this.dao.add(car);
     }
 
     @Override
     public boolean updateCar(Car car) {
-        return this.execute(
-                session -> {
-                    session.update(car);
-                    return true;
-                }
-        );
+        return this.dao.update(car);
     }
 
     @Override
     public boolean deleteCar(int id) {
-        return this.execute(
-                session -> {
-                    boolean deleted = false;
-                    Car car = session.get(Car.class, id);
-                    if (car != null) {
-                        session.delete(car);
-                        deleted = true;
-                    }
-                    return deleted;
-                }
-        );
+        return this.dao.delete(id);
     }
 }

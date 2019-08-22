@@ -18,3 +18,19 @@
 + *chapter_007* - сервлеты
 + *chapter_008* - ввод-вывод
 + *chapter_009* - Hibernate
+
+### Наиболее интересные проекты, над которыми я работал в процессе обучения:
+
+- [Cars Store](https://github.com/VadimBolokhov/vbolokhov/tree/master/chapter_009/src/main/java/ru/job4j/cars) - Web-приложение, реализующее площадку для продажи машин.
+
+![index.html](/images/cars/index.jpg)
+
+Приложение позволяет размещать объявления о продаже автомобилей с возможностью загружать и удалять фотографии
+
+![Adding a car](/images/cars/addcar.jpg)
+
+![Car details](/images/cars/details.jpg)
+
+Реализована возможность авторизации пользователей
+
+![Log in](/images/cars/login.jpg)

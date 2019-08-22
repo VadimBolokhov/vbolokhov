@@ -19,6 +19,12 @@ public interface CarDao {
     List<Car> getAllCars();
 
     /**
+     * Rerurns a list of cars marked as unsold.
+     * @return list of unsold cars
+     */
+    List<Car> getUnsoldCars();
+
+    /**
      * Get the car by id.
      * @param id the id
      * @return {@code Optional<Car>}

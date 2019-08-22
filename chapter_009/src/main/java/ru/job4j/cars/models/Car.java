@@ -1,9 +1,9 @@
 package ru.job4j.cars.models;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
-import java.util.Objects;
+import java.time.LocalDateTime;
 
 /**
  * Car entity.
@@ -14,68 +14,114 @@ import java.util.Objects;
 public class Car {
     /** Car id */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    /** Car make */
-    private String make;
-    /** Car body type */
     @ManyToOne
-    @JoinColumn(name = "body_id")
-    @Cascade(CascadeType.SAVE_UPDATE)
-    private Body body;
-    /** Car engine type */
+    @JoinColumn(name = "mod_id", updatable = false, nullable = false)
+    private Model model;
     @ManyToOne
-    @JoinColumn(name = "eng_id")
-    @Cascade(CascadeType.SAVE_UPDATE)
-    private Engine engine;
-    /** Car transmission type */
+    @JoinColumn(name = "gear_id")
+    private Gearbox gearbox;
+    @Column(name = "odometer")
+    private double odometer;
+    @Column(name = "price")
+    private double price;
+    @Column(name = "sold")
+    private boolean sold;
+    @Column(name = "description")
+    private String desc;
+    @Column(name = "post_date", updatable = false, nullable = false)
+    private LocalDateTime postDate;
+    /** Color */
+    @Enumerated(EnumType.ORDINAL)
+    private Color color;
     @ManyToOne
-    @JoinColumn(name = "trans_id")
-    @Cascade(CascadeType.SAVE_UPDATE)
-    private Transmission transmission;
+    @JsonIgnoreProperties({"cars", "registration", "role"})
+    @JoinColumn(name = "user_id", nullable = false)
+    private User owner;
 
     public Car() {
     }
 
     public int getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public String getMake() {
-        return this.make;
+    public Model getModel() {
+        return model;
     }
 
-    public void setMake(String make) {
-        this.make = make;
+    public void setModel(Model model) {
+        this.model = model;
     }
 
-    public Body getBody() {
-        return this.body;
+    public Gearbox getGearbox() {
+        return gearbox;
     }
 
-    public void setBody(Body body) {
-        this.body = body;
+    public void setGearbox(Gearbox gearbox) {
+        this.gearbox = gearbox;
     }
 
-    public Engine getEngine() {
-        return this.engine;
+    public double getOdometer() {
+        return odometer;
     }
 
-    public void setEngine(Engine engine) {
-        this.engine = engine;
+    public void setOdometer(double odometer) {
+        this.odometer = odometer;
     }
 
-    public Transmission getTransmission() {
-        return this.transmission;
+    public double getPrice() {
+        return price;
     }
 
-    public void setTransmission(Transmission transmission) {
-        this.transmission = transmission;
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public boolean isSold() {
+        return sold;
+    }
+
+    public void setSold(boolean sold) {
+        this.sold = sold;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public LocalDateTime getPostDate() {
+        return postDate;
+    }
+
+    public void setPostDate(LocalDateTime postDate) {
+        this.postDate = postDate;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -87,25 +133,26 @@ public class Car {
             return false;
         }
         Car car = (Car) o;
-        return id == car.id
-                && Objects.equals(make, car.make)
-                && Objects.equals(body, car.body)
-                && Objects.equals(engine, car.engine)
-                && Objects.equals(transmission, car.transmission);
+        return id == car.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, make, body, engine, transmission);
+        return 17;
     }
 
     @Override
     public String toString() {
         return "Car{"
-                + "id=" + this.id
-                + ", make='" + this.make + '\''
-                + ", body=" + this.body.getStyle()
-                + ", engine=" + this.engine.getType()
-                + ", transmission=" + this.transmission.getType() + '}';
+                + "id=" + id
+                + ", model=" + (model == null ? "null" : model.getId())
+                + ", gearbox=" + (gearbox == null ? "null" : gearbox.getId())
+                + ", odometer=" + odometer
+                + ", price=" + price
+                + ", sold=" + sold
+                + ", desc='" + desc + '\''
+                + ", postDate=" + postDate
+                + ", color=" + color
+                + ", owner=" + (owner == null ? "null" : owner.getId())  + '}';
     }
 }

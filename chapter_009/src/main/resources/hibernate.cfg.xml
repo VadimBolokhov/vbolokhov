@@ -8,5 +8,6 @@
         <property name="dialect">org.hibernate.dialect.PostgreSQL95Dialect</property>
 
         <mapping resource="ru/job4j/items/models/Item.hbm.xml"/>
+        <mapping resource="ru/job4j/cars/models/Make.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

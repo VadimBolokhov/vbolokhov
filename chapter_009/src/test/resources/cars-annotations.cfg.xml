@@ -6,13 +6,17 @@
         <property name="connection.username">sa</property>
         <property name="connection.password"></property>
         <property name="dialect">org.hibernate.dialect.HSQLDialect</property>
-        <property name="show_sql">true</property>
-        <property name="hibernate.format_sql">true</property>
         <property name="hibernate.hbm2ddl.auto">create</property>
+        <!--<property name="show_sql">true</property>
+        <property name="format_sql">true</property>-->
 
+        <mapping class="ru.job4j.cars.models.Make"/>
         <mapping class="ru.job4j.cars.models.Body"/>
         <mapping class="ru.job4j.cars.models.Engine"/>
         <mapping class="ru.job4j.cars.models.Transmission"/>
+        <mapping class="ru.job4j.cars.models.Gearbox"/>
         <mapping class="ru.job4j.cars.models.Car"/>
+        <mapping class="ru.job4j.cars.models.Model"/>
+        <mapping class="ru.job4j.cars.models.User"/>
     </session-factory>
 </hibernate-configuration>

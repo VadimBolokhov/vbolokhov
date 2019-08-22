@@ -7,9 +7,13 @@
         <property name="connection.password">password</property>
         <property name="dialect">org.hibernate.dialect.PostgreSQL95Dialect</property>
 
+        <mapping resource="ru/job4j/cars/models/Make.hbm.xml"/>
         <mapping resource="ru/job4j/cars/models/Body.hbm.xml"/>
         <mapping resource="ru/job4j/cars/models/Engine.hbm.xml"/>
         <mapping resource="ru/job4j/cars/models/Transmission.hbm.xml"/>
+        <mapping resource="ru/job4j/cars/models/Gearbox.hbm.xml"/>
+        <mapping resource="ru/job4j/cars/models/Model.hbm.xml"/>
+        <mapping resource="ru/job4j/cars/models/User.hbm.xml"/>
         <mapping resource="ru/job4j/cars/models/Car.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

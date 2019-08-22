@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-mapping>
+    <class name ="ru.job4j.cars.models.Model" table="model">
+        <id name="id" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="name" column="name"/>
+        <many-to-one name="make"
+                     column="make_id"
+                     class="ru.job4j.cars.models.Make"
+                     not-null="true"
+                     update="false"
+                     lazy="false"
+                     cascade="save-update"/>
+        <many-to-one name="body"
+                     column="body_id"
+                     class="ru.job4j.cars.models.Body"
+                     update="false"
+                     not-null="true"
+                     lazy="false"
+                     cascade="save-update"/>
+        <many-to-one name="engine"
+                     column="engine_id"
+                     class="ru.job4j.cars.models.Engine"
+                     update="false"
+                     not-null="true"
+                     lazy="false"
+                     cascade="save-update"/>
+        <many-to-one name="transmission"
+                     column="trans_id"
+                     class="ru.job4j.cars.models.Transmission"
+                     update="false"
+                     not-null="true"
+                     lazy="false"
+                     cascade="save-update"/>
+    </class>
+</hibernate-mapping>
