@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-mapping>
+    <class name ="ru.job4j.cars.models.Gearbox" table="gearbox">
+        <id name="id" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="type" column="name"/>
+    </class>
+</hibernate-mapping>

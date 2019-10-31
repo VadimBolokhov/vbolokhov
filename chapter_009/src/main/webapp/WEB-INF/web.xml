@@ -4,13 +4,134 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
+
+    <filter>
+        <filter-name>JsonContent</filter-name>
+        <filter-class>ru.job4j.cars.filters.ContentFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>JsonContent</filter-name>
+        <url-pattern>/cars/store</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>JsonContent</filter-name>
+        <url-pattern>/cars/signin</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>JsonContent</filter-name>
+        <url-pattern>/cars/signup</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>Authorization</filter-name>
+        <filter-class>ru.job4j.cars.filters.AuthorizationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Authorization</filter-name>
+        <url-pattern>/cars/addcar.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>Authorization</filter-name>
+        <url-pattern>/cars/edit</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>Authorization</filter-name>
+        <url-pattern>/cars/edituser.jsp</url-pattern>
+    </filter-mapping>
+
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/error</location>
+    </error-page>
+
+    <servlet>
+        <servlet-name>ErrorHandler</servlet-name>
+        <servlet-class>ru.job4j.cars.controllers.ErrorHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ErrorHandler</servlet-name>
+        <url-pattern>/error</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>ItemsServlet</servlet-name>
         <servlet-class>ru.job4j.items.controllers.ItemsServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>ItemsServlet</servlet-name>
         <url-pattern>/todolist/items</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CarStoreServlet</servlet-name>
+        <servlet-class>ru.job4j.cars.controllers.CarsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CarStoreServlet</servlet-name>
+        <url-pattern>/cars/store</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Navigate</servlet-name>
+        <servlet-class>ru.job4j.cars.controllers.NavigationServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Navigate</servlet-name>
+        <url-pattern>/cars/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Navigate</servlet-name>
+        <url-pattern>/cars/cardetails.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Navigate</servlet-name>
+        <url-pattern>/cars/usercars.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Navigate</servlet-name>
+        <url-pattern>/cars/editcar.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Navigate</servlet-name>
+        <url-pattern>/cars/addcar.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Navigate</servlet-name>
+        <url-pattern>/cars/edituser.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Users</servlet-name>
+        <servlet-class>ru.job4j.cars.controllers.UsersServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Users</servlet-name>
+        <url-pattern>/cars/signin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Users</servlet-name>
+        <url-pattern>/cars/signout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Users</servlet-name>
+        <url-pattern>/cars/user</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Users</servlet-name>
+        <url-pattern>/cars/signup</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Resources</servlet-name>
+        <servlet-class>ru.job4j.cars.controllers.ResourcesManagement</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Resources</servlet-name>
+        <url-pattern>/cars/resource</url-pattern>
     </servlet-mapping>
 
     <filter>

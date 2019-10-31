@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-mapping>
+    <class name ="ru.job4j.cars.models.User" table="users">
+        <id name="id" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="login" column="login"/>
+        <property name="password" column="password"/>
+        <property name="firstname" column="firstname"/>
+        <property name="lastname" column="lastname"/>
+        <property name="email" column="email"/>
+        <property name="registration" column="reg_date" update="false"/>
+        <property name="role" column="role">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">ru.job4j.cars.models.Role</param>
+            </type>
+        </property>
+        <bag name="cars" inverse="true" table="car" lazy="true">
+            <key>
+                <column name="user_id" not-null="true"/>
+            </key>
+            <one-to-many class="ru.job4j.cars.models.Car"/>
+        </bag>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-mapping>
+    <class name ="ru.job4j.cars.models.Car" table="car">
+        <id name="id" column="id">
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="model"
+                     column="mod_id"
+                     class="ru.job4j.cars.models.Make"
+                     not-null="true"
+                     lazy="false"
+                     update="false"/>
+        <many-to-one name="gearbox"
+                     column="gear_id"
+                     class="ru.job4j.cars.models.Gearbox"/>
+        <property name="odometer" column="odometer"/>
+        <property name="price" column="price"/>
+        <property name="sold" column="sold"/>
+        <property name="desc" column="description"/>
+        <property name="postDate" column="post_date" update="false" not-null="true"/>
+        <property name="color" column="color">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">ru.job4j.cars.models.Color</param>
+            </type>
+        </property>
+        <many-to-one name="owner" class="ru.job4j.cars.models.User">
+            <column name="user_id" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>
