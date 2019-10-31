@@ -21,7 +21,7 @@
 
 ### Наиболее интересные проекты, над которыми я работал в процессе обучения:
 
-- [Cars Store](https://github.com/VadimBolokhov/vbolokhov/tree/master/chapter_009/src/main/java/ru/job4j/cars) - Web-приложение, реализующее площадку для продажи машин.
+- [Cars Store](https://github.com/VadimBolokhov/job4j/tree/master/chapter_009/src/main/java/ru/job4j/cars) - Web-приложение, реализующее площадку для продажи машин.
 
 ![index.html](/images/cars/index.jpg)
 
