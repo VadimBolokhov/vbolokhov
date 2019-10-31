@@ -3,7 +3,7 @@
 
 # Репозиторий Вадима Болохова
 
-Я прохожу обучение у преподавателя [Петра Арсентьева](http://www.job4j.com/about.html) по курсу [Фуллстек Java + JS](https://job4j.ru/courses/java_with_zero_to_job.html)  
+Я прохожу обучение у преподавателя [Петра Арсентьева](https://ru.linkedin.com/in/petr-arsentev-3b196927) по курсу [Фуллстек Java + JS](https://job4j.ru/courses/java_with_zero_to_job.html)  
 
 В настоящий момент осваиваю тему: Spring
 
