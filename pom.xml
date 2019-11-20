@@ -4,7 +4,7 @@
 	<artifactId>vbolokhov</artifactId>
 	<packaging>pom</packaging>
 	<version>2.0</version>
-	<name>vbolokhov</name>
+	<name>Job4j</name>
 	<url>http://job4j.ru</url>
 
 	<properties>
